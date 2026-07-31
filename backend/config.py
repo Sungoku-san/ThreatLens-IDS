@@ -11,12 +11,19 @@ load_dotenv(os.path.join(BASE_DIR, '.env'), override=True)
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY', 'cyber-ids-secret-handshake-token')
     
-    # Database
-    DATABASE_PATH = os.path.join(BASE_DIR, 'database', 'database.db')
+    # Check if running in Vercel serverless environment
+    IS_VERCEL = os.environ.get('VERCEL') == '1' or os.environ.get('VERCEL_ENV') is not None
+    
+    if IS_VERCEL:
+        DATABASE_PATH = '/tmp/database.db'
+        UPLOAD_FOLDER = '/tmp/uploads'
+        REPORTS_FOLDER = '/tmp/reports'
+    else:
+        DATABASE_PATH = os.path.join(BASE_DIR, 'database', 'database.db')
+        UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
+        REPORTS_FOLDER = os.path.join(BASE_DIR, 'reports')
     
     # Directories
-    UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
-    REPORTS_FOLDER = os.path.join(BASE_DIR, 'reports')
     MODEL_FOLDER = os.path.join(BASE_DIR, 'models')
     DATASET_FOLDER = os.path.join(BASE_DIR, 'dataset')
     
@@ -45,3 +52,13 @@ class Config:
         os.makedirs(Config.MODEL_FOLDER, exist_ok=True)
         os.makedirs(Config.DATASET_FOLDER, exist_ok=True)
         os.makedirs(os.path.dirname(Config.DATABASE_PATH), exist_ok=True)
+        
+        # On Vercel serverless, copy the pre-seeded SQLite database to /tmp
+        if Config.IS_VERCEL and not os.path.exists(Config.DATABASE_PATH):
+            import shutil
+            src_db = os.path.join(BASE_DIR, 'database', 'database.db')
+            if os.path.exists(src_db):
+                try:
+                    shutil.copy2(src_db, Config.DATABASE_PATH)
+                except Exception:
+                    pass
