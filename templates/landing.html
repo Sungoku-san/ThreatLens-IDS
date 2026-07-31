@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+
+{% block title %}AI-Based Intrusion Detection System - ML Powered Threat Detection{% endblock %}
+
+{% block head %}
+<style>
+  /* Extra page-specific styling */
+  .hero-shield-glow {
+    filter: drop-shadow(0 0 20px rgba(6, 182, 212, 0.4)) drop-shadow(0 0 40px rgba(139, 92, 246, 0.2));
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="relative min-h-screen flex flex-col justify-between overflow-hidden hex-bg">
+    <!-- Canvas for particle background -->
+    <canvas id="networkCanvas" class="absolute inset-0 z-0 pointer-events-none opacity-45"></canvas>
+    
+    <!-- Top Header -->
+    <header class="relative z-10 w-full px-6 py-4 lg:px-12 flex justify-between items-center border-b border-white/5 glass-panel">
+        <a href="/" class="flex items-center space-x-3 group">
+            <div class="p-2.5 rounded-lg bg-gradient-to-br from-cyberPrimary to-cyberSecondary shadow-neon-blue group-hover:scale-105 transition-all duration-300">
+                <i data-lucide="shield-alert" class="w-6 h-6 text-white"></i>
+            </div>
+            <span class="font-space font-bold text-xl tracking-wider text-white bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-cyberSecondary">
+                CYBER<span class="text-cyberSecondary">IDS</span>
+            </span>
+        </a>
+        <div class="flex items-center space-x-6">
+            <a href="#features" class="hidden md:block text-sm text-gray-400 hover:text-white hover:text-glow-blue transition-colors font-medium">Features</a>
+            <a href="#stats" class="hidden md:block text-sm text-gray-400 hover:text-white hover:text-glow-cyan transition-colors font-medium">Statistics</a>
+            <a href="{{ url_for('login') }}" class="px-5 py-2.5 rounded-lg border border-cyberSecondary/30 text-cyberSecondary hover:bg-cyberSecondary/10 hover:shadow-neon-cyan hover:border-cyberSecondary text-sm font-semibold transition-all duration-300">
+                Sign In
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Hero Section -->
+    <main class="relative z-10 flex-grow flex items-center px-6 py-12 lg:px-16">
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            
+            <!-- Hero Text Panel -->
+            <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+                <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full border border-cyberAccent/30 bg-cyberAccent/10 text-xs font-semibold text-cyberAccent tracking-wide uppercase">
+                    <span class="w-2 h-2 rounded-full bg-cyberAccent animate-pulse"></span>
+                    <span>Next-Gen Security Operations</span>
+                </div>
+                
+                <h1 class="font-space text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight">
+                    AI-Based Intrusion<br>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyberPrimary via-cyberSecondary to-cyberAccent">
+                        Detection System
+                    </span>
+                </h1>
+                
+                <p class="text-lg text-gray-400 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
+                    Machine Learning Powered Network Threat Detection with <span class="text-cyberAccent font-medium">Explainable AI</span>. Analyze packet flows, identify malicious intrusion vectors, and interpret deep model explanations instantly.
+                </p>
+
+                <!-- Actions -->
+                <div class="flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-4 pt-4">
+                    <a href="{{ url_for('login') }}" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-cyberPrimary to-cyberSecondary hover:from-cyberSecondary hover:to-cyberPrimary text-white font-bold tracking-wide shadow-neon-blue hover:shadow-neon-cyan hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-3">
+                        <span>Start Detection</span>
+                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#features" class="w-full sm:w-auto px-8 py-4 rounded-xl border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white font-semibold transition-all duration-300 flex items-center justify-center space-x-2">
+                        <span>Learn More</span>
+                        <i data-lucide="help-circle" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Hero Graphic Panel (SVG Cyber Shield Animation) -->
+            <div class="lg:col-span-5 flex justify-center items-center relative">
+                <!-- Glowing orb behind shield -->
+                <div class="absolute w-72 h-72 rounded-full bg-gradient-to-tr from-cyberSecondary/10 to-cyberAccent/15 blur-3xl -z-10 animate-pulse-slow"></div>
+                
+                <!-- Main Cyber Shield Graphic -->
+                <div class="relative w-80 h-80 sm:w-96 sm:h-96 flex items-center justify-center hero-shield-glow">
+                    <!-- Rotating HUD ring -->
+                    <div class="absolute inset-0 border-2 border-dashed border-cyberSecondary/25 rounded-full animate-[spin_30s_linear_infinite]"></div>
+                    <div class="absolute inset-4 border border-cyberPrimary/20 rounded-full animate-[spin_20s_linear_infinite_reverse]"></div>
+                    
+                    <!-- SVG Cyber Shield outline drawing -->
+                    <svg class="w-48 h-48 sm:w-56 sm:h-56 text-cyberSecondary" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
+                        <!-- Shield Outline -->
+                        <path class="shield-draw" d="M50,10 L85,25 L85,55 C85,75 50,90 50,90 C50,90 15,75 15,55 L15,25 L50,10 Z" stroke-linecap="round" stroke-linejoin="round" />
+                        
+                        <!-- Internal circuit tracks inside shield -->
+                        <path class="shield-draw" d="M50,30 L50,70" stroke-width="1.5" />
+                        <path class="shield-draw" d="M35,45 L50,30 L65,45" stroke-width="1.5" />
+                        <circle cx="50" cy="30" r="3" fill="#06B6D4" class="shield-draw" />
+                        <circle cx="35" cy="45" r="2.5" fill="#8B5CF6" class="shield-draw" />
+                        <circle cx="65" cy="45" r="2.5" fill="#8B5CF6" class="shield-draw" />
+                        <path class="shield-draw" d="M35,60 L50,70 L65,60" stroke-width="1.5" />
+                        <circle cx="35" cy="60" r="2.5" fill="#3B82F6" class="shield-draw" />
+                        <circle cx="65" cy="60" r="2.5" fill="#3B82F6" class="shield-draw" />
+                        <circle cx="50" cy="70" r="3.5" fill="#06B6D4" class="shield-draw" />
+                    </svg>
+
+                    <!-- Scanning Line effect overlaying graphic -->
+                    <div class="absolute w-full h-1 bg-gradient-to-r from-transparent via-cyberSecondary to-transparent opacity-60 top-0 left-0 animate-[scanline_4s_ease-in-out_infinite] pointer-events-none"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Features Section -->
+    <section id="features" class="relative z-10 py-20 px-6 lg:px-16 border-t border-white/5 glass-panel">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+                <h2 class="font-space text-3xl sm:text-4xl font-bold tracking-tight text-white">
+                    Built for Mission-Critical Operations
+                </h2>
+                <p class="text-gray-400 leading-relaxed font-light">
+                    Our platform integrates robust machine learning logic with cutting-edge explainability tools to give security analysts immediate context on incoming alerts.
+                </p>
+            </div>
+            
+            <!-- Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="glass-panel p-8 rounded-2xl glass-panel-hover flex flex-col justify-between group transition-all duration-300">
+                    <div class="space-y-4">
+                        <div class="p-3.5 rounded-xl bg-cyberPrimary/10 text-cyberPrimary w-fit group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="activity" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-space font-bold text-xl text-white group-hover:text-cyberPrimary transition-colors">Real-Time Threat Detection</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed font-light">
+                            Inspects continuous network packets at high frequency, using socket monitoring algorithms to flag abnormalities the instant they cross standard boundaries.
+                        </p>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="glass-panel p-8 rounded-2xl glass-panel-hover flex flex-col justify-between group transition-all duration-300">
+                    <div class="space-y-4">
+                        <div class="p-3.5 rounded-xl bg-cyberSecondary/10 text-cyberSecondary w-fit group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="brain" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-space font-bold text-xl text-white group-hover:text-cyberSecondary transition-colors">Machine Learning Engine</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed font-light">
+                            Utilizes advanced XGBoost and Random Forest architectures trained on standard network benchmark datasets to classify complex flow interactions.
+                        </p>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="glass-panel p-8 rounded-2xl glass-panel-hover flex flex-col justify-between group transition-all duration-300">
+                    <div class="space-y-4">
+                        <div class="p-3.5 rounded-xl bg-cyberAccent/10 text-cyberAccent w-fit group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="eye" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-space font-bold text-xl text-white group-hover:text-cyberAccent transition-colors">Explainable AI (SHAP)</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed font-light">
+                            Peers into the ML blackbox. Generates dynamic Shapley value forces to isolate exactly which header features drove the intrusion alert decision.
+                        </p>
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="glass-panel p-8 rounded-2xl glass-panel-hover flex flex-col justify-between group transition-all duration-300">
+                    <div class="space-y-4">
+                        <div class="p-3.5 rounded-xl bg-cyberSuccess/10 text-cyberSuccess w-fit group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="thumbs-up" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-space font-bold text-xl text-white group-hover:text-cyberSuccess transition-colors">Low False Alarm Rate</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed font-light">
+                            Rigorous model calibration and feature threshold adjustments drastically minimize normal business noise, reducing security operations fatigue.
+                        </p>
+                    </div>
+                </div>
+                <!-- Card 5 -->
+                <div class="glass-panel p-8 rounded-2xl glass-panel-hover flex flex-col justify-between group transition-all duration-300">
+                    <div class="space-y-4">
+                        <div class="p-3.5 rounded-xl bg-cyberWarning/10 text-cyberWarning w-fit group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-space font-bold text-xl text-white group-hover:text-cyberWarning transition-colors">SOC Command Dashboard</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed font-light">
+                            Interactive timeline charts, protocol distribution plots, threat heatmaps, and customizable settings integrated into a modern dashboard layout.
+                        </p>
+                    </div>
+                </div>
+                <!-- Card 6 -->
+                <div class="glass-panel p-8 rounded-2xl glass-panel-hover flex flex-col justify-between group transition-all duration-300">
+                    <div class="space-y-4">
+                        <div class="p-3.5 rounded-xl bg-cyberDanger/10 text-cyberDanger w-fit group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-space font-bold text-xl text-white group-hover:text-cyberDanger transition-colors">Recommended Action Plan</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed font-light">
+                            Provides automatic mitigations for incident response teams—such as firewall blocking commands, packet captures, and ports isolation.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section id="stats" class="relative z-10 py-24 px-6 lg:px-16">
+        <div class="max-w-7xl mx-auto glass-panel p-8 md:p-12 rounded-3xl relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-cyberPrimary/5 to-cyberSecondary/5 -z-10"></div>
+            
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 divide-y lg:divide-y-0 lg:divide-x divide-white/10 text-center">
+                <!-- Stat 1 -->
+                <div class="pt-6 lg:pt-0">
+                    <p class="text-4xl sm:text-5xl font-space font-bold text-cyberSecondary text-glow-cyan" id="stat-detected">0</p>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-2 font-medium tracking-wide uppercase">Detected Attacks</p>
+                </div>
+                <!-- Stat 2 -->
+                <div class="pt-6 lg:pt-0 lg:pl-6">
+                    <p class="text-4xl sm:text-5xl font-space font-bold text-white" id="stat-safe">0</p>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-2 font-medium tracking-wide uppercase">Safe Connections</p>
+                </div>
+                <!-- Stat 3 -->
+                <div class="pt-6 lg:pt-0 lg:pl-6">
+                    <p class="text-4xl sm:text-5xl font-space font-bold text-cyberAccent text-glow-purple" id="stat-accuracy">0%</p>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-2 font-medium tracking-wide uppercase">Detection Accuracy</p>
+                </div>
+                <!-- Stat 4 -->
+                <div class="pt-6 lg:pt-0 lg:pl-6">
+                    <p class="text-4xl sm:text-5xl font-space font-bold text-cyberDanger text-glow-danger" id="stat-far">0%</p>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-2 font-medium tracking-wide uppercase">False Alarm Rate</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative z-10 w-full px-6 py-12 lg:px-16 border-t border-white/5 bg-[#070b15]/90">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+            <!-- Col 1: About -->
+            <div class="space-y-4 col-span-1 md:col-span-2">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 rounded bg-gradient-to-br from-cyberPrimary to-cyberSecondary">
+                        <i data-lucide="shield-alert" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <span class="font-space font-bold text-lg text-white">CYBER<span class="text-cyberSecondary">IDS</span></span>
+                </div>
+                <p class="text-sm text-gray-400 leading-relaxed font-light max-w-sm">
+                    A machine learning security research project visualizing live intrusion vectors and explaining decisions via game-theory-derived Shapley values.
+                </p>
+                <div class="flex items-center space-x-4 pt-2">
+                    <a href="https://github.com" target="_blank" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/5 hover:border-white/10 hover:shadow-neon-cyan transition-all duration-300">
+                        <i data-lucide="github" class="w-5 h-5"></i>
+                    </a>
+                    <a href="mailto:contact@cyberids.com" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/5 hover:border-white/10 hover:shadow-neon-cyan transition-all duration-300">
+                        <i data-lucide="mail" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Col 2: Technologies -->
+            <div class="space-y-4">
+                <h4 class="font-space font-bold text-white text-sm tracking-wider uppercase">Technologies Used</h4>
+                <ul class="space-y-2 text-sm text-gray-400 font-light">
+                    <li class="flex items-center space-x-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-cyberPrimary"></span>
+                        <span>Python (Flask)</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-cyberSecondary"></span>
+                        <span>Tailwind CSS</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-cyberAccent"></span>
+                        <span>JavaScript & ApexCharts</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-cyberWarning"></span>
+                        <span>SHAP / XGBoost Engine</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Col 3: Quick Navigation -->
+            <div class="space-y-4">
+                <h4 class="font-space font-bold text-white text-sm tracking-wider uppercase">Contact & Info</h4>
+                <p class="text-sm text-gray-400 font-light leading-relaxed">
+                    Designed for modern network monitoring deployment pipelines.<br>
+                    <span class="text-gray-300">© 2026 CYBER-IDS Group.</span>
+                </p>
+                <div class="text-xs text-cyberSecondary font-mono font-medium">
+                    SYS-STATUS: SECURE [v1.0.4]
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/landing.js') }}"></script>
+{% endblock %}

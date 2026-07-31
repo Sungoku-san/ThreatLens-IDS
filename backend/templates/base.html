@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI-Based Intrusion Detection System{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              cyberBg: '#0B1120',
+              cyberCard: 'rgba(17, 24, 39, 0.7)',
+              cyberCardSolid: '#111827',
+              cyberPrimary: '#3B82F6',
+              cyberSecondary: '#06B6D4',
+              cyberAccent: '#8B5CF6',
+              cyberDanger: '#EF4444',
+              cyberSuccess: '#10B981',
+              cyberWarning: '#F59E0B',
+            },
+            fontFamily: {
+              space: ['"Space Grotesk"', 'sans-serif'],
+              inter: ['Inter', 'sans-serif'],
+            },
+            boxShadow: {
+              'neon-blue': '0 0 15px rgba(59, 130, 246, 0.25)',
+              'neon-cyan': '0 0 15px rgba(6, 182, 212, 0.25)',
+              'neon-purple': '0 0 15px rgba(139, 92, 246, 0.25)',
+              'neon-danger': '0 0 15px rgba(239, 68, 68, 0.25)',
+            }
+          }
+        }
+      }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- ApexCharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body class="bg-[#0B1120] text-gray-100 font-inter min-h-screen flex flex-col selection:bg-cyberSecondary/30 selection:text-white overflow-x-hidden">
+    
+    {% block content %}{% endblock %}
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+      lucide.createIcons();
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,30 @@
+# Environment secrets
+.env
+backend/.env
+
+# Local database
+ids_database.db
+backend/ids_database.db
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Python Caches & Compiled bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# System / IDE config
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs & temp files
+*.log
+backend/logs/
+tests/temp_test_files/

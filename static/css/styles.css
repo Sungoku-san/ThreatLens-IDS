@@ -1,0 +1,194 @@
+/* Custom CSS for AI-Based Intrusion Detection System UI */
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #0B1120;
+}
+::-webkit-scrollbar-thumb {
+    background: #1F2937;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #374151;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+    background: rgba(17, 24, 39, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-panel-hover:hover {
+    background: rgba(17, 24, 39, 0.85);
+    border-color: rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+    transform: translateY(-2px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Futuristic Cyber Grid overlay */
+.cyber-grid {
+    background-image: 
+        linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: center center;
+}
+
+/* Glow effects */
+.text-glow-blue {
+    text-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+}
+.text-glow-cyan {
+    text-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
+}
+.text-glow-purple {
+    text-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
+}
+.text-glow-danger {
+    text-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+.text-glow-success {
+    text-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.border-glow-blue:hover {
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.25);
+}
+.border-glow-cyan:hover {
+    border-color: rgba(6, 182, 212, 0.5);
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
+}
+.border-glow-purple:hover {
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.25);
+}
+
+/* CSS Keyframe Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-slow {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.6; }
+}
+
+@keyframes draw-svg {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes scanline {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+.animate-float {
+    animation: float 4s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* Cyber Shield drawing effect */
+.shield-draw {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: draw-svg 3s ease-in-out forwards;
+}
+
+/* Scanline Effect */
+.scanline::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 2;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+}
+
+/* Typing cursor animation */
+.cursor-typing::after {
+    content: '|';
+    animation: blink 0.8s step-end infinite;
+}
+
+@keyframes blink {
+    from, to { color: transparent }
+    50% { color: #06B6D4; }
+}
+
+/* Status dots */
+.status-dot-pulse {
+    position: relative;
+}
+.status-dot-pulse::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 50%;
+    animation: pulse-ring 1.5s cubic-bezier(0.215, 0.610, 0.355, 1) infinite;
+}
+
+@keyframes pulse-ring {
+    0% { transform: scale(0.5); opacity: 1; }
+    80%, 100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Custom range input (Settings Threshold) */
+input[type=range].cyber-range {
+    -webkit-appearance: none;
+    background: #1F2937;
+    border-radius: 8px;
+    height: 6px;
+}
+input[type=range].cyber-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #3B82F6;
+    cursor: pointer;
+    box-shadow: 0 0 10px #3B82F6;
+}
+
+/* Tab contents animation */
+.tab-content {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.35s ease-in-out;
+}
+.tab-content.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Drag & Drop Highlight */
+.drag-over {
+    border-color: #06B6D4 !important;
+    background: rgba(6, 182, 212, 0.05) !important;
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.15) !important;
+}
+
+/* Hexagon Grid Background (Used in Login/Hero) */
+.hex-bg {
+    background-color: #0b1120;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cpath fill='%2306b6d4' fill-opacity='0.02' d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5M14 0L0 8.08v16.17l14 8.08 14-8.08V8.08L14 0z'/%3E%3C/svg%3E");
+}

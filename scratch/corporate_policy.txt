@@ -1,0 +1,13 @@
+# CORPORATE SOC RESPONSE PLAN & PROTOCOLS
+
+## Section 1: Overview
+This corporate document establishes standard policies for detecting and isolating intrusion alerts on core switches, specifically for denial of service (DDoS) and brute force network incursions.
+
+## Section 2: Denial of Service (DDoS) Ingress Rules
+When a denial of service attack is detected:
+1. Isolate the target network segment immediately.
+2. Ingest the source IP using: `sudo iptables -A INPUT -s <attacker_ip> -j DROP`.
+3. Configure SNORT alerts with: `drop tcp any any -> any any (flags:S; msg:"DDoS Alert"; sid:100002;)`.
+
+## Section 3: Compliance & Audits Standards
+Under ISO 27001 control A.12, all intrusion logs must be cataloged in a database, audited weekly, and outputted as signed incident PDF files.

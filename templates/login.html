@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In - CYBER-IDS Command Center{% endblock %}
+
+{% block content %}
+<div class="relative min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 hex-bg">
+    <!-- Back to landing button -->
+    <a href="/" class="absolute top-6 left-6 flex items-center space-x-2 text-sm text-gray-400 hover:text-white transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        <span>Back to Landing</span>
+    </a>
+
+    <!-- Main Container -->
+    <div class="max-w-5xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch glass-panel rounded-3xl overflow-hidden shadow-neon-blue border-white/10">
+        
+        <!-- Left Side: Login Form -->
+        <div class="lg:col-span-6 p-8 sm:p-12 flex flex-col justify-between space-y-8 bg-[#0c1425]/90">
+            <!-- Header -->
+            <div class="space-y-3">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 rounded-lg bg-gradient-to-br from-cyberPrimary to-cyberSecondary shadow-neon-blue">
+                        <i data-lucide="shield-alert" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <span class="font-space font-bold text-lg text-white">CYBER<span class="text-cyberSecondary">IDS</span></span>
+                </div>
+                <h2 class="font-space text-2xl sm:text-3xl font-bold tracking-tight text-white">Welcome back</h2>
+                <p class="text-sm text-gray-400 font-light">Access the Explainable AI Intrusion Dashboard</p>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="errorBanner" class="hidden px-4 py-3 rounded-lg border border-cyberDanger/30 bg-cyberDanger/10 text-xs text-cyberDanger flex items-center space-x-2 animate-pulse">
+                <i data-lucide="alert-octagon" class="w-4 h-4 flex-shrink-0"></i>
+                <span id="errorMessage">Invalid username or password.</span>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="space-y-6" action="{{ url_for('login') }}" method="POST">
+                <!-- Username field -->
+                <div class="space-y-2">
+                    <label for="username" class="block text-xs font-semibold text-gray-300 tracking-wider uppercase">Username</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500">
+                            <i data-lucide="user" class="w-4.5 h-4.5"></i>
+                        </div>
+                        <input id="username" name="username" type="text" required
+                            class="block w-full pl-11 pr-4 py-3 bg-[#0f192b] border border-white/5 focus:border-cyberSecondary rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-cyberSecondary transition-all duration-200" 
+                            placeholder="Enter username">
+                    </div>
+                </div>
+
+                <!-- Password field -->
+                <div class="space-y-2">
+                    <label for="password" class="block text-xs font-semibold text-gray-300 tracking-wider uppercase">Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500">
+                            <i data-lucide="lock" class="w-4.5 h-4.5"></i>
+                        </div>
+                        <input id="password" name="password" type="password" required
+                            class="block w-full pl-11 pr-4 py-3 bg-[#0f192b] border border-white/5 focus:border-cyberSecondary rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-cyberSecondary transition-all duration-200" 
+                            placeholder="Enter password">
+                    </div>
+                </div>
+
+                <!-- Utilities -->
+                <div class="flex items-center justify-between text-xs">
+                    <label class="flex items-center space-x-2 text-gray-400 hover:text-white cursor-pointer select-none">
+                        <input type="checkbox" name="remember" class="w-4 h-4 rounded border-gray-600 bg-gray-800 text-cyberSecondary focus:ring-cyberSecondary focus:ring-offset-0">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="text-cyberSecondary hover:underline font-medium">Forgot password?</a>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submitBtn" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-cyberPrimary to-cyberSecondary hover:from-cyberSecondary hover:to-cyberPrimary text-white font-bold tracking-wide shadow-neon-blue hover:shadow-neon-cyan focus:outline-none hover:scale-[1.02] transition-all duration-200 flex items-center justify-center space-x-2">
+                    <span id="btnText">Initiate SOC Handshake</span>
+                    <i data-lucide="shield" class="w-4 h-4" id="btnIcon"></i>
+                    <!-- Loader spinner -->
+                    <svg id="btnLoader" class="hidden animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </form>
+
+            <!-- Bottom info -->
+            <div class="text-center text-xs text-gray-500">
+                Authorized security clearance required. Access logged under SOC standard guidelines.
+            </div>
+        </div>
+
+        <!-- Right Side: Cybersecurity SOC Illustration -->
+        <div class="hidden lg:col-span-6 lg:flex flex-col justify-center items-center p-12 bg-gradient-to-br from-cyberPrimary/5 via-cyberBg to-cyberAccent/10 border-l border-white/5 relative overflow-hidden">
+            <!-- Rotating target grid -->
+            <div class="absolute w-[450px] h-[450px] border border-dashed border-cyberSecondary/10 rounded-full animate-[spin_40s_linear_infinite]"></div>
+            <div class="absolute w-72 h-72 border border-cyberPrimary/10 rounded-full animate-[spin_20s_linear_infinite_reverse]"></div>
+            
+            <!-- Graphic Container -->
+            <div class="relative z-10 space-y-8 w-full max-w-sm text-center">
+                <div class="relative inline-flex items-center justify-center p-8 bg-[#111827]/40 rounded-full border border-cyberSecondary/25 shadow-neon-cyan animate-float">
+                    <i data-lucide="shield-check" class="w-16 h-16 text-cyberSecondary animate-[pulse_2s_ease-in-out_infinite]"></i>
+                </div>
+                
+                <div class="space-y-2">
+                    <h3 class="font-space font-bold text-white text-lg tracking-wider uppercase">Active Node Interception</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed font-light">
+                        Deploy machine learning classification layers directly into your data pipelines. Monitor flows, visualize feature weights, and trace threats in real time.
+                    </p>
+                </div>
+                
+                <!-- Mock logs -->
+                <div class="glass-panel text-left p-4 rounded-xl space-y-2 text-[10px] font-mono text-gray-400 bg-black/45 border-white/5">
+                    <div class="flex justify-between items-center text-cyberSuccess">
+                        <span>[OK] SECURE_NODE_CONN</span>
+                        <span>10.0.0.14</span>
+                    </div>
+                    <div class="flex justify-between items-center text-cyberSecondary">
+                        <span>[DATA] FLOW_ANALYSIS_RUN</span>
+                        <span>PORTS 80/443</span>
+                    </div>
+                    <div class="flex justify-between items-center text-cyberDanger animate-pulse">
+                        <span>[ALERT] PORT_SCAN_INTENT</span>
+                        <span>CONFIDENCE 98.7%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('loginForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const btnIcon = document.getElementById('btnIcon');
+        const btnLoader = document.getElementById('btnLoader');
+        const errorBanner = document.getElementById('errorBanner');
+        const errorMessage = document.getElementById('errorMessage');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Show loading state
+            btnText.innerText = "Handshaking Secure Socket...";
+            btnIcon.classList.add('hidden');
+            btnLoader.classList.remove('hidden');
+            submitBtn.disabled = true;
+            errorBanner.classList.add('hidden');
+
+            const username = form.username.value;
+            const password = form.password.value;
+
+            try {
+                const response = await fetch("{{ url_for('login') }}", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.status === 'success') {
+                    // Success callback
+                    btnText.innerText = "Handshake Complete! Redirecting...";
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 800);
+                } else {
+                    throw new Error(data.message || "Authentication failed.");
+                }
+            } catch (err) {
+                // Error state
+                console.error(err);
+                errorMessage.innerText = err.message;
+                errorBanner.classList.remove('hidden');
+                
+                // Reset button
+                btnText.innerText = "Initiate SOC Handshake";
+                btnIcon.classList.remove('hidden');
+                btnLoader.classList.add('hidden');
+                submitBtn.disabled = false;
+            }
+        });
+    });
+</script>
+{% endblock %}
