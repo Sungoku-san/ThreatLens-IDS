@@ -2,7 +2,11 @@ import os
 import pickle
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler, LabelEncoder
+try:
+    from sklearn.preprocessing import StandardScaler, LabelEncoder
+    SKLEARN_AVAILABLE = True
+except ImportError:
+    SKLEARN_AVAILABLE = False
 from backend.config import Config
 from backend.utils.logger import logger
 
@@ -58,6 +62,9 @@ def fit_save_preprocessors(df, features, target_col="Label"):
 
 def load_preprocessors():
     """Loads pre-trained scaler and encoder serialization weights."""
+    if not SKLEARN_AVAILABLE:
+        raise ImportError("scikit-learn is not installed in this environment.")
+        
     scaler_path = os.path.join(Config.MODEL_FOLDER, 'scaler.pkl')
     encoder_path = os.path.join(Config.MODEL_FOLDER, 'label_encoder.pkl')
     
