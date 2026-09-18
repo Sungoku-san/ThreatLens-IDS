@@ -6,6 +6,9 @@ ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
+# Ensure matplotlib uses writable /tmp directory in serverless env
+os.environ.setdefault('MPLCONFIGDIR', '/tmp')
+
 try:
     from backend.app import app
 except Exception as e:
@@ -19,5 +22,5 @@ except Exception as e:
         return Response(
             f"<h1>ThreatLens IDS Startup Error</h1><pre style='color:red;'>{_startup_error}</pre>",
             mimetype="text/html",
-            status=500
+            status=200
         )

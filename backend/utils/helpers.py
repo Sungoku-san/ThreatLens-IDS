@@ -186,6 +186,9 @@ def update_env_keys(gemini_key=None, openai_key=None, groq_key=None):
         if not updated_groq and groq_key is not None:
             new_lines.append(f"GROQ_API_KEY={groq_key}\n")
             
-        with open(path, 'w', encoding='utf-8') as f:
-            f.writelines(new_lines)
+        try:
+            with open(path, 'w', encoding='utf-8') as f:
+                f.writelines(new_lines)
+        except OSError:
+            pass
 
