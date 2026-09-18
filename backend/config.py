@@ -57,14 +57,14 @@ class Config:
         if Config.IS_VERCEL:
             import shutil
             src_db = os.path.join(BASE_DIR, 'database', 'database.db')
-            if os.path.exists(src_db) and not os.path.exists(Config.DATABASE_PATH):
+            if os.path.exists(src_db) and (not os.path.exists(Config.DATABASE_PATH) or os.path.getsize(Config.DATABASE_PATH) == 0):
                 try:
                     shutil.copy2(src_db, Config.DATABASE_PATH)
                 except Exception:
                     pass
             src_vec = os.path.join(BASE_DIR, 'database', 'vector_store.json')
             dst_vec = os.path.join(os.path.dirname(Config.DATABASE_PATH), 'vector_store.json')
-            if os.path.exists(src_vec) and not os.path.exists(dst_vec):
+            if os.path.exists(src_vec) and (not os.path.exists(dst_vec) or os.path.getsize(dst_vec) == 0):
                 try:
                     shutil.copy2(src_vec, dst_vec)
                 except Exception:
