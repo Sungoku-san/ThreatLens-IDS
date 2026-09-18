@@ -65,6 +65,10 @@
                     <i data-lucide="file-text" class="w-4.5 h-4.5"></i>
                     <span>Reports</span>
                 </a>
+                <a href="#copilot" data-tab="copilot" class="tab-link flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/5 transition-all duration-200">
+                    <i data-lucide="message-square-code" class="w-4.5 h-4.5 text-cyberAccent"></i>
+                    <span>AI Security Copilot</span>
+                </a>
                 <a href="#settings" data-tab="settings" class="tab-link flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/5 transition-all duration-200">
                     <i data-lucide="settings" class="w-4.5 h-4.5"></i>
                     <span>Settings</span>
@@ -586,6 +590,128 @@
                 </div>
             </div>
 
+            </div>
+
+            <!-- ================= TAB 5.5: AI SECURITY COPILOT ================= -->
+            <div id="tab-copilot" class="tab-content space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                    
+                    <!-- Left Panel: Chat Interface (7 columns) -->
+                    <div class="lg:col-span-7 flex flex-col justify-between glass-panel rounded-2xl h-[calc(100vh-12rem)] min-h-[500px]">
+                        <!-- Chat Header -->
+                        <div class="px-6 py-4 border-b border-white/5 bg-[#0a101e] flex justify-between items-center rounded-t-2xl">
+                            <div class="flex items-center space-x-3">
+                                <div class="p-2 rounded bg-gradient-to-br from-cyberAccent to-cyberSecondary shadow-neon-purple/20">
+                                    <i data-lucide="bot" class="w-5 h-5 text-white animate-pulse"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-space font-bold text-sm text-white">AI Analyst Copilot</h4>
+                                    <p class="text-[10px] text-gray-400">Context-Aware RAG Threat Advisor</p>
+                                </div>
+                            </div>
+                            <!-- Clear chat memory button -->
+                            <button id="clearChatBtn" class="p-2 rounded-lg hover:bg-white/5 text-gray-400 hover:text-cyberDanger transition-colors" title="Wipe chat history">
+                                <i data-lucide="trash-2" class="w-4.5 h-4.5"></i>
+                            </button>
+                        </div>
+
+                        <!-- Chat Messages Thread -->
+                        <div id="chatMessagesContainer" class="flex-grow overflow-y-auto p-6 space-y-4">
+                            <!-- Injected by JS, seed initial analyst message -->
+                            <div class="flex items-start space-x-3 max-w-[85%]">
+                                <div class="w-8 h-8 rounded-full bg-cyberAccent/20 flex items-center justify-center border border-cyberAccent/30 text-cyberAccent text-xs font-bold">AI</div>
+                                <div class="bg-[#111827]/70 border border-white/5 rounded-2xl rounded-tl-none p-4 text-xs leading-relaxed text-gray-300">
+                                    Greetings SOC Analyst. I am your **AI Security Copilot**. I have access to your active network flow prediction datasets, SHAP explainers parameters, and uploaded organizational documentation. How can I assist you with threat containment or investigation rules today?
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Quick Action Prompt Templates -->
+                        <div class="px-6 pt-2 pb-4 border-t border-white/5 space-y-2 bg-[#090e1b]/40">
+                            <p class="text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Quick Actions</p>
+                            <div class="flex flex-wrap gap-2 text-[10px] font-bold">
+                                <button class="quick-prompt-btn px-3 py-1.5 rounded-lg border border-cyberAccent/20 hover:border-cyberAccent bg-cyberAccent/5 hover:bg-cyberAccent/15 text-cyberAccent transition-all duration-200" data-prompt="Analyze the active SHAP flow connections data.">Explain SHAP</button>
+                                <button class="quick-prompt-btn px-3 py-1.5 rounded-lg border border-cyberDanger/20 hover:border-cyberDanger bg-cyberDanger/5 hover:bg-cyberDanger/15 text-cyberDanger transition-all duration-200" data-prompt="Suggest immediate mitigation and firewall block commands for the active threat.">Suggest Mitigation</button>
+                                <button class="quick-prompt-btn px-3 py-1.5 rounded-lg border border-cyberPrimary/20 hover:border-cyberPrimary bg-cyberPrimary/5 hover:bg-cyberPrimary/15 text-cyberPrimary transition-all duration-200" data-prompt="Explain the active threat mapping to MITRE ATT&CK techniques.">Explain MITRE</button>
+                                <button class="quick-prompt-btn px-3 py-1.5 rounded-lg border border-cyberSecondary/20 hover:border-cyberSecondary bg-cyberSecondary/5 hover:bg-cyberSecondary/15 text-cyberSecondary transition-all duration-200" data-prompt="Explain SQL Injection and DDoS attacks using simple analogies for beginners.">Beginner Mode</button>
+                                <button class="quick-prompt-btn px-3 py-1.5 rounded-lg border border-cyberWarning/20 hover:border-cyberWarning bg-cyberWarning/5 hover:bg-cyberWarning/15 text-cyberWarning transition-all duration-200" data-prompt="Provide a technical expert analysis of TCP SYN flood vulnerabilities on database ports.">Expert Analysis</button>
+                            </div>
+                        </div>
+
+                        <!-- Chat Input Box -->
+                        <div class="p-4 border-t border-white/5 bg-[#0a101e] rounded-b-2xl">
+                            <form id="copilotChatForm" class="flex items-center space-x-3">
+                                <input type="text" id="chatInput" placeholder="Ask Copilot about active SHAP flows, CVEs, or mitigation plans..." 
+                                    class="flex-grow px-4 py-3 bg-[#0c1425] border border-white/5 focus:border-cyberAccent rounded-xl text-xs text-white focus:outline-none focus:ring-1 focus:ring-cyberAccent transition-all">
+                                <button type="submit" class="p-3 rounded-xl bg-gradient-to-r from-cyberAccent to-cyberPrimary hover:from-cyberPrimary hover:to-cyberAccent text-white shadow-neon-purple/20 hover:scale-105 active:scale-95 transition-transform flex items-center justify-center">
+                                    <i data-lucide="send" class="w-4 h-4"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel: Manuals Upload & Smart Search (5 columns) -->
+                    <div class="lg:col-span-5 flex flex-col gap-6">
+                        <!-- Global Smart Search -->
+                        <div class="glass-panel p-6 rounded-2xl space-y-4">
+                            <h4 class="font-space font-bold text-sm text-white">Global Smart Search</h4>
+                            <p class="text-[10px] text-gray-400">Search keywords across MITRE, CVEs, ingested documents, and logs simultaneously.</p>
+                            <div class="flex gap-2">
+                                <div class="relative flex-grow">
+                                    <input type="text" id="smartSearchQuery" placeholder="Query manual contents (e.g. ISO 27001, SYN flood)..." class="w-full pl-9 pr-4 py-2.5 bg-[#0f192b] border border-white/5 rounded-xl text-xs text-white focus:outline-none focus:border-cyberAccent">
+                                    <i data-lucide="search" class="absolute left-3 top-3 w-4 h-4 text-gray-500"></i>
+                                </div>
+                                <button id="smartSearchBtn" class="px-4 py-2.5 rounded-xl bg-cyberAccent/20 hover:bg-cyberAccent/30 border border-cyberAccent/30 text-cyberAccent text-xs font-bold transition-all">Search</button>
+                            </div>
+                            
+                            <!-- Search results panel -->
+                            <div id="searchResultsList" class="hidden max-h-48 overflow-y-auto space-y-2.5 text-xs text-gray-400 font-light pt-2">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Manual Document Library RAG Upload -->
+                        <div class="glass-panel p-6 rounded-2xl space-y-4 flex-grow flex flex-col justify-between">
+                            <div class="space-y-4">
+                                <h4 class="font-space font-bold text-sm text-white flex items-center space-x-2">
+                                    <i data-lucide="folder-git" class="w-4 h-4 text-cyberSecondary"></i>
+                                    <span>RAG Document Library</span>
+                                </h4>
+                                <p class="text-[10px] text-gray-400">Upload corporate incident runbooks, firewalls guides, or NIST compliance standards (PDF/TXT) to inject semantic RAG knowledge.</p>
+                                
+                                <!-- Document Drag Area -->
+                                <div id="docDragDropArea" class="border-2 border-dashed border-white/10 hover:border-cyberAccent rounded-xl p-6 text-center cursor-pointer bg-black/10 hover:bg-cyberAccent/5 transition-all flex flex-col items-center space-y-2">
+                                    <i data-lucide="file-up" class="w-6 h-6 text-cyberAccent"></i>
+                                    <span class="text-xs text-white font-semibold">Ingest manuals document</span>
+                                    <span class="text-[9px] text-gray-500 font-light">Supports PDF, DOCX, TXT, MD</span>
+                                    <input type="file" id="manualDocInput" class="hidden" accept=".pdf,.docx,.txt,.md">
+                                </div>
+
+                                <!-- Ingestion Progress Indicator -->
+                                <div id="docProgressIndicator" class="hidden space-y-1.5 pt-2">
+                                    <div class="flex justify-between items-center text-[10px]">
+                                        <span class="text-gray-400">Extracting and calculating vector chunks...</span>
+                                        <span class="text-cyberAccent font-bold" id="docProgressPercent">0%</span>
+                                    </div>
+                                    <div class="w-full bg-[#1c283f] rounded-full h-1 overflow-hidden">
+                                        <div id="docProgressBar" class="bg-cyberAccent h-full rounded-full transition-all duration-200" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Ingested Documents List -->
+                            <div class="space-y-2.5 pt-4 border-t border-white/5">
+                                <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Ingested Manuals Catalog</p>
+                                <div class="max-h-48 overflow-y-auto space-y-2" id="ingestedManualsList">
+                                    <!-- Ingested documents list elements injected dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
             <!-- ================= TAB 6: SETTINGS ================= -->
             <div id="tab-settings" class="tab-content space-y-6">
                 <div class="max-w-4xl mx-auto space-y-6">
@@ -646,6 +772,35 @@
                                     <input type="checkbox" name="toggle" id="audioToggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-gray-600 border-4 border-gray-800 appearance-none cursor-pointer focus:outline-none">
                                     <label for="audioToggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-800 cursor-pointer"></label>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Copilot API Configurations Panel -->
+                    <div class="glass-panel p-6 rounded-2xl space-y-6">
+                        <h3 class="font-space font-bold text-lg text-white border-b border-white/5 pb-3">AI Copilot API Configurations</h3>
+                        <p class="text-xs text-gray-400 font-light">Configure API credentials to connect the Security Copilot to active AI reasoning models (Gemini / Groq).</p>
+                        
+                        <div class="space-y-4">
+                            <div class="space-y-1.5">
+                                <label for="geminiApiKey" class="block text-[10px] font-semibold text-gray-300 uppercase tracking-wider">Gemini API Key</label>
+                                <input type="password" id="geminiApiKey" placeholder="Enter GEMINI_API_KEY (Unconfigured)" 
+                                    class="block w-full px-4 py-2.5 bg-[#0c1425] border border-white/5 focus:border-cyberAccent rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-cyberAccent transition-all duration-200">
+                            </div>
+                            <div class="space-y-1.5">
+                                <label for="groqApiKey" class="block text-[10px] font-semibold text-gray-300 uppercase tracking-wider">Groq API Key</label>
+                                <input type="password" id="groqApiKey" placeholder="Enter GROQ_API_KEY (Unconfigured)" 
+                                    class="block w-full px-4 py-2.5 bg-[#0c1425] border border-white/5 focus:border-cyberAccent rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-cyberAccent transition-all duration-200">
+                            </div>
+                            
+                            <div class="pt-2 flex justify-between items-center">
+                                <button id="saveApiKeysBtn" class="py-2.5 px-6 rounded-xl bg-gradient-to-r from-cyberAccent to-cyberPrimary hover:from-cyberPrimary hover:to-cyberAccent text-white text-xs font-bold transition-transform shadow-neon-purple/20 hover:scale-105 active:scale-95 duration-200">
+                                    Save API Keys
+                                </button>
+                                <span id="saveKeysStatus" class="hidden text-xs font-semibold text-cyberSuccess flex items-center space-x-1.5 animate-pulse">
+                                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                    <span>Keys updated successfully</span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -751,6 +906,11 @@
                         <i data-lucide="shield-alert" class="w-4 h-4"></i>
                         <span>Apply Port Mitigation Block</span>
                     </button>
+                    <!-- Download AI Incident Report Button -->
+                    <button id="drawerDownloadAiReportBtn" class="w-full py-2.5 rounded-lg bg-cyberAccent/20 hover:bg-cyberAccent/30 text-cyberAccent text-xs font-bold tracking-wide flex items-center justify-center space-x-2 border border-cyberAccent/30 hover:border-cyberAccent mt-2">
+                        <i data-lucide="file-down" class="w-4 h-4"></i>
+                        <span>Download AI Incident Report</span>
+                    </button>
                 </div>
             </div>
 
@@ -761,6 +921,10 @@
             <button id="drawerOpenShapBtn" class="flex-grow py-3 rounded-lg bg-cyberAccent/20 hover:bg-cyberAccent/30 text-cyberAccent text-xs font-bold transition-all flex items-center justify-center space-x-2 border border-cyberAccent/30 hover:border-cyberAccent shadow-neon-purple/10">
                 <i data-lucide="eye" class="w-4 h-4"></i>
                 <span>Open SHAP dashboard</span>
+            </button>
+            <button id="drawerAskCopilotBtn" class="flex-grow py-3 rounded-lg bg-cyberPrimary/20 hover:bg-cyberPrimary/30 text-cyberPrimary text-xs font-bold transition-all flex items-center justify-center space-x-2 border border-cyberPrimary/30 hover:border-cyberPrimary shadow-neon-blue/10">
+                <i data-lucide="message-square-code" class="w-4 h-4"></i>
+                <span>Consult AI Copilot</span>
             </button>
         </div>
 

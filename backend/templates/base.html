@@ -45,6 +45,9 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
     {% block head %}{% endblock %}
 </head>
 <body class="bg-[#0B1120] text-gray-100 font-inter min-h-screen flex flex-col selection:bg-cyberSecondary/30 selection:text-white overflow-x-hidden">

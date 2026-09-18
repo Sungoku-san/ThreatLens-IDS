@@ -235,6 +235,11 @@ class TestFlaskAPI(unittest.TestCase):
         self.assertEqual(data["status"], "success")
         self.assertEqual(data["state"], "UP")
 
+    def test_favicon(self):
+        response = self.client.get('/favicon.ico')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("image", response.content_type)
+
     def test_login(self):
         # Correct credentials
         resp = self.client.post('/login', json={"username": "admin", "password": "password123"})

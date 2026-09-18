@@ -15,7 +15,7 @@ try:
     SHAP_AVAILABLE = True
     logger.info("SHAP explainability package successfully loaded.")
 except ImportError:
-    logger.warning("SHAP package not available or failed to load. Activating Surrogate Explainer engine.")
+    logger.info("SHAP package not available or failed to load. Activating Surrogate Explainer engine.")
 
 # Global cache for explainer instances
 _EXPLAINER = None

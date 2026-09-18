@@ -46,19 +46,26 @@ class Config:
     
     @staticmethod
     def init_app(app):
-        # Create directories if they don't exist
-        os.makedirs(Config.UPLOAD_FOLDER, exist_ok=True)
-        os.makedirs(Config.REPORTS_FOLDER, exist_ok=True)
-        os.makedirs(Config.MODEL_FOLDER, exist_ok=True)
-        os.makedirs(Config.DATASET_FOLDER, exist_ok=True)
-        os.makedirs(os.path.dirname(Config.DATABASE_PATH), exist_ok=True)
+        # Create directories if they don't exist, safely ignoring read-only filesystem errors
+        for folder in [Config.UPLOAD_FOLDER, Config.REPORTS_FOLDER, Config.MODEL_FOLDER, Config.DATASET_FOLDER, os.path.dirname(Config.DATABASE_PATH)]:
+            try:
+                os.makedirs(folder, exist_ok=True)
+            except OSError:
+                pass
         
-        # On Vercel serverless, copy the pre-seeded SQLite database to /tmp
-        if Config.IS_VERCEL and not os.path.exists(Config.DATABASE_PATH):
+        # On Vercel serverless, copy the pre-seeded SQLite database and vector store to /tmp
+        if Config.IS_VERCEL:
             import shutil
             src_db = os.path.join(BASE_DIR, 'database', 'database.db')
-            if os.path.exists(src_db):
+            if os.path.exists(src_db) and not os.path.exists(Config.DATABASE_PATH):
                 try:
                     shutil.copy2(src_db, Config.DATABASE_PATH)
+                except Exception:
+                    pass
+            src_vec = os.path.join(BASE_DIR, 'database', 'vector_store.json')
+            dst_vec = os.path.join(os.path.dirname(Config.DATABASE_PATH), 'vector_store.json')
+            if os.path.exists(src_vec) and not os.path.exists(dst_vec):
+                try:
+                    shutil.copy2(src_vec, dst_vec)
                 except Exception:
                     pass

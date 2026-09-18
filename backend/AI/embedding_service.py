@@ -9,7 +9,7 @@ try:
     TRANSFORMERS_AVAILABLE = True
     logger.info("SentenceTransformers package loaded successfully.")
 except ImportError:
-    logger.warning("SentenceTransformers not found. Activating TF-IDF fallback vectorizer.")
+    logger.info("SentenceTransformers not found. Activating TF-IDF fallback vectorizer.")
 
 class EmbeddingService:
     @staticmethod

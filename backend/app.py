@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, send_from_directory
 from backend.config import Config
 from backend.utils.helpers import init_db
 from backend.utils.logger import logger
@@ -21,8 +21,11 @@ from backend.routes.manual import manual_bp
 from backend.routes.threat import threat_bp
 
 def create_app():
-    # Set directories relative to this file
-    app = Flask(__name__, template_folder='templates', static_folder='static')
+    # Set directories using absolute paths relative to this file
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    template_dir = os.path.join(base_dir, 'templates')
+    static_dir = os.path.join(base_dir, 'static')
+    app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
     
     # Load configuration
     app.config.from_object(Config)
@@ -78,6 +81,14 @@ def create_app():
     @app.route('/dashboard')
     def dashboard():
         return render_template('dashboard.html')
+
+    @app.route('/favicon.ico')
+    def favicon():
+        return send_from_directory(app.static_folder, 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
+    @app.route('/static/<path:filename>')
+    def serve_static(filename):
+        return send_from_directory(app.static_folder, filename)
         
     @app.errorhandler(404)
     def page_not_found(e):

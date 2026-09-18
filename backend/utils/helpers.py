@@ -6,7 +6,10 @@ from backend.config import Config
 
 def get_db_connection():
     """Context connection to the SQLite database."""
-    os.makedirs(os.path.dirname(Config.DATABASE_PATH), exist_ok=True)
+    try:
+        os.makedirs(os.path.dirname(Config.DATABASE_PATH), exist_ok=True)
+    except OSError:
+        pass
     conn = sqlite3.connect(Config.DATABASE_PATH)
     conn.row_factory = sqlite3.Row
     return conn
