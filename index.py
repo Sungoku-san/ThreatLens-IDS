@@ -6,21 +6,11 @@ ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
-# Ensure matplotlib uses writable /tmp directory in serverless env
+# Ensure matplotlib uses writable /tmp directory in serverless environment
 os.environ.setdefault('MPLCONFIGDIR', '/tmp')
 
-try:
-    from backend.app import app
-except Exception as e:
-    import traceback
-    _startup_error = traceback.format_exc()
-    from flask import Flask, Response
-    app = Flask(__name__)
-    @app.route('/', defaults={'path': ''})
-    @app.route('/<path:path>')
-    def _error_fallback(path):
-        return Response(
-            f"<h1>ThreatLens IDS Startup Error</h1><pre style='color:red;'>{_startup_error}</pre>",
-            mimetype="text/html",
-            status=200
-        )
+# Top-level import and assignments for Vercel WSGI entrypoint detection
+from backend.app import app
+
+application = app
+handler = app
