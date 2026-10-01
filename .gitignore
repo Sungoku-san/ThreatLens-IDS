@@ -1,31 +1,83 @@
-# Environment secrets
+# ==============================================================================
+# ThreatLens (CYBERIDS) - Git Ignore Specification
+# Excludes sensitive credentials, environment secrets, runtime artifacts & caches
+# ==============================================================================
+
+# 1. Environment Variables, Secrets & API Keys
 .env
+.env.*
+*.env
 backend/.env
+backend/.env.*
+!*.env.example
 
-# Local database
-ids_database.db
-backend/ids_database.db
+# 2. Private Keys, Certificates & Authentication Credentials
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+credentials.json
+secrets.json
+token.json
+service_account.json
+*secret*
+*token*
 
-# Virtual Environment
+# 3. Runtime Uploads & Dynamic File Ingestion
+backend/uploads/*
+!backend/uploads/.gitkeep
+uploads/*
+!uploads/.gitkeep
+
+# 4. Runtime Generated Audit Reports (PDF, CSV, JSON)
+backend/reports/*
+!backend/reports/.gitkeep
+reports/*
+!reports/.gitkeep
+
+# 5. Application Logs & Temporary Test Files
+*.log
+backend/logs/
+logs/
+tests/temp_test_files/
+*.tmp
+*.temp
+
+# 6. Local Scratch & Development Sandboxes
+scratch/
+
+# 7. Virtual Environments
 .venv/
 venv/
 ENV/
 env/
+env.bak/
+venv.bak/
 
-# Python Caches & Compiled bytecode
+# 8. Python Bytecode, Caches & Profiling
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
 .pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
 
-# System / IDE config
+# 9. IDE, Operating System & Workspace Files
 .idea/
 .vscode/
+*.swp
+*.swo
+*~
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+desktop.ini
 
-# Logs & temp files
-*.log
-backend/logs/
-tests/temp_test_files/
-scratch/
