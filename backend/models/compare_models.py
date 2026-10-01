@@ -2,11 +2,10 @@ import os
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
 import pandas as pd
 from sklearn.metrics import roc_curve, auc
-from backend.config import Config
+from backend.config import BASE_DIR, Config
 
 class ModelComparisonPlotter:
     @staticmethod
@@ -14,25 +13,28 @@ class ModelComparisonPlotter:
         """
         Generates and saves model performance comparison visual charts to the static web directory.
         """
-        img_dir = os.path.join(Config.BASE_DIR, 'static', 'img')
+        img_dir = os.path.join(BASE_DIR, 'static', 'img')
         os.makedirs(img_dir, exist_ok=True)
-        
-        # Set styling context
-        sns.set_theme(style="darkgrid")
         
         # 1. Performance Metrics Bar Chart Comparison
         plt.figure(figsize=(10, 6))
         metrics = ['accuracy', 'precision', 'recall', 'f1_score']
-        df_melted = pd.melt(results_df, id_vars=['model_name'], value_vars=metrics, 
-                            var_name='Metric', value_name='Value')
+        models = results_df['model_name'].tolist()
+        x = np.arange(len(models))
+        width = 0.18
         
-        sns.barplot(x='model_name', y='Value', hue='Metric', data=df_melted, palette='viridis')
+        colors = ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6']
+        for i, metric in enumerate(metrics):
+            values = results_df[metric].tolist()
+            plt.bar(x + (i - 1.5) * width, values, width, label=metric.capitalize(), color=colors[i % len(colors)], alpha=0.9)
+            
         plt.title('Classifier Performance Metrics Comparison', fontsize=14, fontweight='bold', pad=15)
         plt.ylim(0, 1.1)
         plt.ylabel('Score')
         plt.xlabel('Machine Learning Model')
-        plt.xticks(rotation=15)
+        plt.xticks(x, models, rotation=15)
         plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+        plt.grid(axis='y', linestyle='--', alpha=0.3)
         plt.tight_layout()
         plt.savefig(os.path.join(img_dir, 'model_comparison.png'), dpi=150)
         plt.close()
@@ -44,23 +46,22 @@ class ModelComparisonPlotter:
                 try:
                     probs = model.predict_proba(X_test)
                     if probs.shape[1] > 2:
-                        # For multi-class (OVR), let's plot average micro ROC or target class 1 (Malicious)
-                        # We will aggregate all binary outputs for target class 1
                         y_test_bin = (y_test > 0).astype(int)
-                        probs_malicious = np.sum(probs[:, 1:], axis=1) # combine malicious probabilities
+                        probs_malicious = np.sum(probs[:, 1:], axis=1)
                         fpr, tpr, _ = roc_curve(y_test_bin, probs_malicious)
                     else:
                         fpr, tpr, _ = roc_curve(y_test, probs[:, 1])
                     roc_auc = auc(fpr, tpr)
-                    plt.plot(fpr, tpr, label=f'{model_name} (AUC = {roc_auc:.4f})')
+                    plt.plot(fpr, tpr, lw=2, label=f'{model_name} (AUC = {roc_auc:.4f})')
                 except Exception:
                     pass
                     
-        plt.plot([0, 1], [0, 1], 'k--', label='Baseline Guess (AUC = 0.5000)')
+        plt.plot([0, 1], [0, 1], 'k--', lw=1.5, label='Baseline Guess (AUC = 0.5000)')
         plt.xlabel('False Positive Rate')
         plt.ylabel('True Positive Rate')
         plt.title('Receiver Operating Characteristic (ROC) Curves', fontsize=14, fontweight='bold')
         plt.legend(loc='lower right')
+        plt.grid(True, linestyle='--', alpha=0.3)
         plt.tight_layout()
         plt.savefig(os.path.join(img_dir, 'roc_curve.png'), dpi=150)
         plt.close()
@@ -71,11 +72,23 @@ class ModelComparisonPlotter:
         best_cm = np.array(confusion_matrices.get(best_model_name, [[0, 0], [0, 0]]))
         
         plt.figure(figsize=(6, 5))
-        sns.heatmap(best_cm, annot=True, fmt='d', cmap='Blues', cbar=False,
-                    annot_kws={"size": 12, "weight": "bold"})
+        plt.imshow(best_cm, interpolation='nearest', cmap=plt.cm.Blues)
         plt.title(f'Confusion Matrix Heatmap\n({best_model_name})', fontsize=12, fontweight='bold', pad=10)
-        plt.xlabel('Predicted Threat Label')
+        plt.colorbar()
+        tick_marks = np.arange(len(best_cm))
+        plt.xticks(tick_marks, [f'Class {i}' for i in tick_marks], rotation=45)
+        plt.yticks(tick_marks, [f'Class {i}' for i in tick_marks])
+        
+        thresh = best_cm.max() / 2.0 if best_cm.max() > 0 else 1.0
+        for i in range(best_cm.shape[0]):
+            for j in range(best_cm.shape[1]):
+                plt.text(j, i, format(best_cm[i, j], 'd'),
+                         ha="center", va="center",
+                         color="white" if best_cm[i, j] > thresh else "black",
+                         fontweight="bold")
+                         
         plt.ylabel('Actual Threat Label')
+        plt.xlabel('Predicted Threat Label')
         plt.tight_layout()
         plt.savefig(os.path.join(img_dir, 'confusion_matrix.png'), dpi=150)
         plt.close()
@@ -87,12 +100,13 @@ class ModelComparisonPlotter:
             importance_df = pd.DataFrame({
                 'Feature': list(features_dict.keys()),
                 'Importance': list(features_dict.values())
-            }).sort_values(by='Importance', ascending=False)
+            }).sort_values(by='Importance', ascending=True).tail(10)
             
-            sns.barplot(x='Importance', y='Feature', data=importance_df.head(10), palette='mako')
+            plt.barh(importance_df['Feature'], importance_df['Importance'], color='#06B6D4', alpha=0.85)
             plt.title(f'Top 10 Feature Importances\n({best_model_name})', fontsize=12, fontweight='bold', pad=10)
             plt.xlabel('Gini Importance / Gain Weight')
-            plt.ylabel('Packet Feature name')
+            plt.ylabel('Packet Feature Name')
+            plt.grid(axis='x', linestyle='--', alpha=0.3)
             plt.tight_layout()
             plt.savefig(os.path.join(img_dir, 'feature_importance.png'), dpi=150)
         plt.close()

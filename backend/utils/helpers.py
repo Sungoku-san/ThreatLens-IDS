@@ -90,7 +90,79 @@ def init_db():
         )
     ''')
 
-    
+    # 6. Incidents Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS incidents (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            incident_id TEXT NOT NULL UNIQUE,
+            flow_id TEXT,
+            detection_time TEXT NOT NULL,
+            attack_type TEXT NOT NULL,
+            severity TEXT NOT NULL,
+            risk_score INTEGER NOT NULL,
+            confidence REAL NOT NULL,
+            src_ip TEXT NOT NULL,
+            dst_ip TEXT NOT NULL,
+            port INTEGER NOT NULL,
+            protocol TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'NEW',
+            assigned_analyst TEXT DEFAULT 'SOC Analyst 1',
+            recommended_actions TEXT,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        )
+    ''')
+
+    # 7. Audit Logs Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS audit_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp TEXT NOT NULL,
+            action TEXT NOT NULL,
+            user TEXT NOT NULL,
+            details TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'SUCCESS'
+        )
+    ''')
+
+    # 8. Model Evaluations Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS model_evaluations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            model_name TEXT NOT NULL,
+            evaluation_time TEXT NOT NULL,
+            dataset_name TEXT NOT NULL,
+            total_samples INTEGER NOT NULL,
+            accuracy REAL NOT NULL,
+            precision REAL NOT NULL,
+            recall REAL NOT NULL,
+            f1_score REAL NOT NULL,
+            roc_auc REAL NOT NULL,
+            correct_predictions INTEGER NOT NULL,
+            incorrect_predictions INTEGER NOT NULL,
+            classes_json TEXT NOT NULL,
+            confusion_matrix_json TEXT NOT NULL,
+            classification_report_json TEXT NOT NULL,
+            comparison_json TEXT NOT NULL,
+            dataset_analysis_json TEXT NOT NULL,
+            quality_checks_json TEXT NOT NULL,
+            is_active INTEGER NOT NULL DEFAULT 1
+        )
+    ''')
+
+    # Schema Migrations: Safely check for new columns in predictions
+    try:
+        cursor.execute("PRAGMA table_info(predictions)")
+        pred_cols = [col[1] for col in cursor.fetchall()]
+        if 'risk_score' not in pred_cols:
+            cursor.execute("ALTER TABLE predictions ADD COLUMN risk_score INTEGER DEFAULT 0")
+        if 'anomaly_score' not in pred_cols:
+            cursor.execute("ALTER TABLE predictions ADD COLUMN anomaly_score REAL DEFAULT 0.0")
+        if 'is_anomaly' not in pred_cols:
+            cursor.execute("ALTER TABLE predictions ADD COLUMN is_anomaly INTEGER DEFAULT 0")
+    except Exception:
+        pass
+
     # Check if we need to seed initial mock statistics
     cursor.execute("SELECT COUNT(*) FROM metrics")
     if cursor.fetchone()[0] == 0:
@@ -106,6 +178,41 @@ def init_db():
             INSERT INTO model_info (model_name, accuracy, precision, recall, f1_score, roc_auc, trained_at, active)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ''', ("Random Forest Ingestion Classifier", 0.9942, 0.9921, 0.9930, 0.9925, 0.9984, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 1))
+
+    # Check if we need to seed initial incidents
+    cursor.execute("SELECT COUNT(*) FROM incidents")
+    if cursor.fetchone()[0] == 0:
+        now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        seed_incidents = [
+            ("INC-2026-001", "FL-7294", now_str, "DDoS Ingress Exploit", "CRITICAL", 94, 99.42, "192.168.1.105", "10.0.0.1", 80, "TCP", "NEW", "Lead Analyst", "Apply perimeter rate limit and drop SYN packets at edge firewall"),
+            ("INC-2026-002", "FL-8102", now_str, "Port Scanner Reconnaissance", "HIGH", 78, 93.10, "172.16.0.45", "10.0.0.12", 443, "TCP", "INVESTIGATING", "SOC Analyst 2", "Block source IP in IPTables and inspect access log headers"),
+            ("INC-2026-003", "FL-9041", now_str, "SSH Brute-Force Authentication", "HIGH", 82, 95.80, "198.51.100.24", "10.0.0.22", 22, "TCP", "CONTAINED", "Security Admin", "Isolate SSH daemon, enforce key-only authentication and fail2ban rules"),
+            ("INC-2026-004", "FL-9520", now_str, "Anomalous Traffic Outlier", "MEDIUM", 55, 72.40, "203.0.113.88", "10.0.0.80", 8080, "TCP", "RESOLVED", "SOC Analyst 1", "Verified anomalous telemetry spike from scheduled load test; marked resolved")
+        ]
+        for inc in seed_incidents:
+            cursor.execute('''
+                INSERT INTO incidents (
+                    incident_id, flow_id, detection_time, attack_type, severity,
+                    risk_score, confidence, src_ip, dst_ip, port, protocol,
+                    status, assigned_analyst, recommended_actions, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (inc[0], inc[1], inc[2], inc[3], inc[4], inc[5], inc[6], inc[7], inc[8], inc[9], inc[10], inc[11], inc[12], inc[13], now_str, now_str))
+
+    # Check if we need to seed initial audit logs
+    cursor.execute("SELECT COUNT(*) FROM audit_logs")
+    if cursor.fetchone()[0] == 0:
+        now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        seed_logs = [
+            (now_str, "SYSTEM_INITIALIZE", "SYSTEM", "ThreatLens SOC Core initialized and database verified", "SUCCESS"),
+            (now_str, "MODEL_LOAD", "ML_ENGINE", "Random Forest classifier mounted with 12 features", "SUCCESS"),
+            (now_str, "ANOMALY_ENGINE_INIT", "ANOMALY_ENGINE", "Isolation Forest unsupervised engine calibrated", "SUCCESS"),
+            (now_str, "INCIDENT_CREATED", "RULE_ENGINE", "Incident INC-2026-001 created automatically from high-risk DDoS detection", "SUCCESS")
+        ]
+        for l in seed_logs:
+            cursor.execute('''
+                INSERT INTO audit_logs (timestamp, action, user, details, status)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (l[0], l[1], l[2], l[3], l[4]))
         
     conn.commit()
     conn.close()
@@ -114,11 +221,17 @@ def row_to_dict(row):
     """Converts a sqlite3.Row object to a standard dict."""
     d = dict(row)
     # Parse JSON properties automatically
-    if 'shap_values' in d:
-        try:
-            d['shap_values'] = json.loads(d['shap_values'])
-        except:
-            pass
+    json_keys = [
+        'shap_values', 'classes_json', 'confusion_matrix_json', 
+        'classification_report_json', 'comparison_json', 
+        'dataset_analysis_json', 'quality_checks_json'
+    ]
+    for key in json_keys:
+        if key in d and d[key] is not None and isinstance(d[key], str):
+            try:
+                d[key] = json.loads(d[key])
+            except Exception:
+                pass
     return d
 
 def update_env_keys(gemini_key=None, openai_key=None, groq_key=None):

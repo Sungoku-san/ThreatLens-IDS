@@ -18,12 +18,18 @@ class RagEngine:
         
         # 1. Document retrieval from vector index
         doc_context = ""
+        sources_used = []
         try:
             q_vector = EmbeddingService.get_embedding(query)
-            matches = VectorStore.query(q_vector, top_k=2)
+            matches = VectorStore.query(q_vector, top_k=3)
             if matches:
-                doc_context = "\n---\n".join([m["text"] for m in matches])
-                logger.info(f"RAG Engine: Retrieved {len(matches)} matching document chunks.")
+                doc_chunks = []
+                for idx, m in enumerate(matches, 1):
+                    src_name = m.get("filename", f"Security_Manual_{idx}.pdf")
+                    sources_used.append(src_name)
+                    doc_chunks.append(f"[Document: {src_name} | Chunk #{idx}]\n{m['text']}")
+                doc_context = "\n---\n".join(doc_chunks)
+                logger.info(f"RAG Engine: Retrieved {len(matches)} matching document chunks from: {sources_used}")
         except Exception as e:
             logger.error(f"RAG Engine: Document retrieval failed: {str(e)}")
 
@@ -67,7 +73,8 @@ IP Threat Intelligence Summary for '{src_ip}':
             full_system_prompt += f"\n\n[Conversation History Memory]\n{history_str}"
             
         context_data = {
-            "mode": mode
+            "mode": mode,
+            "sources_used": list(set(sources_used))
         }
         if active_flow:
             context_data["active_flow"] = active_flow

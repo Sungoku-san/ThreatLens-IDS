@@ -86,7 +86,10 @@ def explain_prediction(payload, prediction_result, model):
             
             # Compute shap values
             # For multi-class, shap_values is a list of arrays (one for each class)
-            raw_shap = explainer.shap_values(x_inst)
+            try:
+                raw_shap = explainer.shap_values(x_inst, check_additivity=False)
+            except TypeError:
+                raw_shap = explainer.shap_values(x_inst)
             
             # Extract target class index from prediction
             _, encoder = load_preprocessors()
@@ -212,3 +215,42 @@ def _build_natural_explanation(prediction, positive_features, negative_features)
             return f"The network traffic was classified as benign/normal. The core parameters, specifically {feat_str}, align with standard secure flow bounds."
         else:
             return "The network traffic matches standard baseline features. No malicious signatures were detected."
+
+def get_global_feature_importance(model=None):
+    """
+    Returns ranked global feature importances for all 12 network features.
+    """
+    from backend.models.predict import load_trained_model
+    if model is None:
+        try:
+            model = load_trained_model()
+        except Exception:
+            model = None
+
+    importances = None
+    if model is not None and hasattr(model, 'feature_importances_'):
+        importances = model.feature_importances_
+    elif model is not None and hasattr(model, 'coef_'):
+        importances = np.mean(np.abs(model.coef_), axis=0)
+
+    if importances is None:
+        importances = np.ones(len(SELECTED_FEATURES)) / len(SELECTED_FEATURES)
+
+    # Normalize to 100%
+    total = np.sum(importances)
+    norm_importances = (importances / total) if total > 0 else importances
+
+    ranked = []
+    for idx, feat in enumerate(SELECTED_FEATURES):
+        ranked.append({
+            "feature": feat,
+            "importance": round(float(norm_importances[idx]), 4),
+            "percentage": round(float(norm_importances[idx]) * 100, 2),
+            "raw_score": round(float(importances[idx]), 4)
+        })
+
+    ranked.sort(key=lambda x: x["importance"], reverse=True)
+    for rank, item in enumerate(ranked, start=1):
+        item["rank"] = rank
+
+    return ranked

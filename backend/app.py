@@ -19,6 +19,9 @@ from backend.routes.document import document_bp
 from backend.routes.knowledge import knowledge_bp
 from backend.routes.manual import manual_bp
 from backend.routes.threat import threat_bp
+from backend.routes.evaluation import evaluation_bp
+from backend.routes.incidents import incidents_bp
+from backend.routes.system import system_bp
 
 def create_app():
     # Set directories using absolute paths relative to this file
@@ -49,6 +52,9 @@ def create_app():
     app.register_blueprint(knowledge_bp)
     app.register_blueprint(manual_bp)
     app.register_blueprint(threat_bp)
+    app.register_blueprint(evaluation_bp)
+    app.register_blueprint(incidents_bp)
+    app.register_blueprint(system_bp)
     
     # Web template routes
     @app.route('/')

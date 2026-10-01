@@ -28,3 +28,4 @@ Thumbs.db
 *.log
 backend/logs/
 tests/temp_test_files/
+scratch/

@@ -10,11 +10,15 @@ from datetime import datetime
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, IsolationForest
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
 import xgboost as xgb
-import lightgbm as lgb
+try:
+    import lightgbm as lgb
+    LIGHTGBM_AVAILABLE = True
+except ImportError:
+    LIGHTGBM_AVAILABLE = False
 
 from backend.config import Config
 from backend.models.preprocess import clean_data, fit_save_preprocessors
@@ -64,9 +68,26 @@ def train_and_evaluate_all():
         "Random Forest": RandomForestClassifier(n_estimators=100, max_depth=12, random_state=42, n_jobs=-1),
         "Decision Tree": DecisionTreeClassifier(max_depth=10, random_state=42),
         "Logistic Regression": LogisticRegression(max_iter=1000, solver='lbfgs', random_state=42),
-        "XGBoost": xgb.XGBClassifier(n_estimators=100, max_depth=6, random_state=42, eval_metric='mlogloss', n_jobs=-1),
-        "LightGBM": lgb.LGBMClassifier(n_estimators=100, max_depth=6, random_state=42, verbose=-1, n_jobs=-1)
+        "XGBoost": xgb.XGBClassifier(n_estimators=100, max_depth=6, random_state=42, eval_metric='mlogloss', n_jobs=-1)
     }
+    if LIGHTGBM_AVAILABLE:
+        models["LightGBM"] = lgb.LGBMClassifier(n_estimators=100, max_depth=6, random_state=42, verbose=-1, n_jobs=-1)
+
+    # Train Isolation Forest Anomaly Detector
+    logger.info("Training unsupervised Isolation Forest Anomaly Detector...")
+    benign_indices = np.where(encoder.classes_ == "BENIGN")[0]
+    if len(benign_indices) > 0:
+        benign_mask = (y_train == benign_indices[0])
+        X_train_benign = X_train[benign_mask] if np.sum(benign_mask) > 10 else X_train
+    else:
+        X_train_benign = X_train
+
+    anomaly_detector = IsolationForest(n_estimators=100, contamination=0.05, random_state=42, n_jobs=-1)
+    anomaly_detector.fit(X_train_benign)
+    anomaly_path = os.path.join(Config.MODEL_FOLDER, 'anomaly_detector.pkl')
+    with open(anomaly_path, 'wb') as f:
+        pickle.dump(anomaly_detector, f)
+    logger.info(f"Saved Isolation Forest anomaly detector to {anomaly_path}")
     
     results = []
     confusion_matrices = {}

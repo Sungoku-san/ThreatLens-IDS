@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}SOC Command Center - AI-Based Intrusion Detection System{% endblock %}
+{% block title %}ThreatLens SOC Command Center - AI-Powered Cybersecurity Platform{% endblock %}
 
 {% block head %}
 <style>
@@ -17,6 +17,22 @@
     .toggle-checkbox:checked + .toggle-label {
         background-color: #3B82F6;
     }
+
+    /* Custom scrollbar for cyber tables */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #0B1120;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(6, 182, 212, 0.4);
+    }
 </style>
 {% endblock %}
 
@@ -32,62 +48,108 @@
 
     <!-- 1. LEFT SIDEBAR -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 lg:static lg:block transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out bg-[#0d1527] border-r border-white/5 flex flex-col justify-between">
-        <div class="flex flex-col flex-grow">
+        <div class="flex flex-col flex-grow overflow-hidden">
             <!-- Sidebar Header / Logo -->
-            <div class="h-16 flex items-center px-6 border-b border-white/5 bg-[#0a101e]">
+            <div class="h-16 flex items-center px-6 border-b border-white/5 bg-[#0a101e] flex-shrink-0">
                 <a href="/" class="flex items-center space-x-3">
                     <div class="p-2 rounded bg-gradient-to-br from-cyberPrimary to-cyberSecondary shadow-neon-blue">
                         <i data-lucide="shield-alert" class="w-4 h-4 text-white"></i>
                     </div>
-                    <span class="font-space font-bold text-base text-white tracking-wider">CYBER<span class="text-cyberSecondary">IDS</span></span>
+                    <div class="flex flex-col">
+                        <span class="font-space font-bold text-base text-white tracking-wider">THREAT<span class="text-cyberSecondary">LENS</span></span>
+                        <span class="text-[9px] font-mono text-gray-400 -mt-1 tracking-widest uppercase">SOC PLATFORM</span>
+                    </div>
                 </a>
             </div>
 
             <!-- Navigation Links -->
-            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-                <a href="#overview" data-tab="overview" class="tab-link active flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/5 hover:shadow-neon-blue/5 transition-all duration-200">
-                    <i data-lucide="layout-dashboard" class="w-4.5 h-4.5"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="#upload" data-tab="upload" class="tab-link flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/5 transition-all duration-200">
-                    <i data-lucide="upload-cloud" class="w-4.5 h-4.5"></i>
-                    <span>Upload Dataset</span>
-                </a>
-                <a href="#monitoring" data-tab="monitoring" class="tab-link flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/5 transition-all duration-200">
-                    <i data-lucide="activity" class="w-4.5 h-4.5"></i>
-                    <span>Real-Time Monitor</span>
-                </a>
-                <a href="#shap" data-tab="shap" class="tab-link flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/5 transition-all duration-200">
-                    <i data-lucide="eye" class="w-4.5 h-4.5"></i>
-                    <span>SHAP Analysis</span>
-                </a>
-                <a href="#reports" data-tab="reports" class="tab-link flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/5 transition-all duration-200">
-                    <i data-lucide="file-text" class="w-4.5 h-4.5"></i>
-                    <span>Reports</span>
-                </a>
-                <a href="#copilot" data-tab="copilot" class="tab-link flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/5 transition-all duration-200">
-                    <i data-lucide="message-square-code" class="w-4.5 h-4.5 text-cyberAccent"></i>
-                    <span>AI Security Copilot</span>
-                </a>
-                <a href="#settings" data-tab="settings" class="tab-link flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/5 transition-all duration-200">
-                    <i data-lucide="settings" class="w-4.5 h-4.5"></i>
-                    <span>Settings</span>
-                </a>
+            <nav class="flex-1 px-3 py-4 space-y-4 overflow-y-auto">
+                <!-- Section: OPERATIONS -->
+                <div class="space-y-1">
+                    <p class="px-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest font-mono">Operations</p>
+                    <a href="#overview" data-tab="overview" class="tab-link active flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent transition-all duration-200">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4 text-cyberPrimary"></i>
+                        <span>Security Overview</span>
+                    </a>
+                    <a href="#monitoring" data-tab="monitoring" class="tab-link flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent transition-all duration-200">
+                        <i data-lucide="activity" class="w-4 h-4 text-cyberSecondary"></i>
+                        <span>Detection Engine</span>
+                    </a>
+                    <a href="#incidents" data-tab="incidents" class="tab-link flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent transition-all duration-200">
+                        <i data-lucide="shield-alert" class="w-4 h-4 text-cyberDanger"></i>
+                        <span>Incident Management</span>
+                    </a>
+                </div>
+
+                <!-- Section: ANALYTICS & ML -->
+                <div class="space-y-1">
+                    <p class="px-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest font-mono">Analytics & ML</p>
+                    <a href="#ml-performance" data-tab="ml-performance" class="tab-link flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent transition-all duration-200">
+                        <i data-lucide="target" class="w-4 h-4 text-cyberAccent"></i>
+                        <span>ML Performance Center</span>
+                    </a>
+                    <a href="#threat-analytics" data-tab="threat-analytics" class="tab-link flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent transition-all duration-200">
+                        <i data-lucide="flame" class="w-4 h-4 text-cyberWarning"></i>
+                        <span>Threat Analytics & MITRE</span>
+                    </a>
+                    <a href="#anomaly-detection" data-tab="anomaly-detection" class="tab-link flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent transition-all duration-200">
+                        <i data-lucide="crosshair" class="w-4 h-4 text-cyberSecondary"></i>
+                        <span>Anomaly Detection</span>
+                    </a>
+                    <a href="#shap" data-tab="shap" class="tab-link flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent transition-all duration-200">
+                        <i data-lucide="eye" class="w-4 h-4 text-cyberAccent"></i>
+                        <span>XAI / SHAP Center</span>
+                    </a>
+                </div>
+
+                <!-- Section: DATA MANAGEMENT -->
+                <div class="space-y-1">
+                    <p class="px-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest font-mono">Data & Models</p>
+                    <a href="#dataset-center" data-tab="dataset-center" class="tab-link flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent transition-all duration-200">
+                        <i data-lucide="database" class="w-4 h-4 text-cyberPrimary"></i>
+                        <span>Dataset & Quality</span>
+                    </a>
+                    <a href="#upload" data-tab="upload" class="tab-link flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent transition-all duration-200">
+                        <i data-lucide="upload-cloud" class="w-4 h-4 text-gray-400"></i>
+                        <span>Upload Dataset</span>
+                    </a>
+                </div>
+
+                <!-- Section: COPILOT & AUDIT -->
+                <div class="space-y-1">
+                    <p class="px-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest font-mono">Assistance & Ops</p>
+                    <a href="#copilot" data-tab="copilot" class="tab-link flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent transition-all duration-200">
+                        <i data-lucide="message-square-code" class="w-4 h-4 text-cyberAccent"></i>
+                        <span>AI Security Copilot</span>
+                    </a>
+                    <a href="#reports" data-tab="reports" class="tab-link flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent transition-all duration-200">
+                        <i data-lucide="file-text" class="w-4 h-4 text-cyberSuccess"></i>
+                        <span>Reports & Compliance</span>
+                    </a>
+                    <a href="#system-audit" data-tab="system-audit" class="tab-link flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent transition-all duration-200">
+                        <i data-lucide="cpu" class="w-4 h-4 text-cyberSecondary"></i>
+                        <span>System Health & Audit</span>
+                    </a>
+                    <a href="#settings" data-tab="settings" class="tab-link flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/5 border border-transparent transition-all duration-200">
+                        <i data-lucide="settings" class="w-4 h-4 text-gray-400"></i>
+                        <span>Settings</span>
+                    </a>
+                </div>
             </nav>
         </div>
 
         <!-- Sidebar Footer / Logout -->
-        <div class="p-4 border-t border-white/5 bg-[#0a101e]">
-            <div class="flex items-center space-x-3 px-4 py-3 mb-3">
+        <div class="p-4 border-t border-white/5 bg-[#0a101e] flex-shrink-0">
+            <div class="flex items-center space-x-3 px-3 py-2 mb-2">
                 <div class="w-8 h-8 rounded-full bg-cyberAccent/20 flex items-center justify-center text-cyberAccent font-bold text-xs uppercase border border-cyberAccent/30 shadow-neon-purple/20">
                     AD
                 </div>
                 <div class="flex-grow min-w-0">
-                    <p class="text-xs font-semibold text-white truncate">Administrator</p>
-                    <p class="text-[10px] text-gray-400 truncate">SOC clearance 3</p>
+                    <p class="text-xs font-semibold text-white truncate">SOC Analyst</p>
+                    <p class="text-[10px] text-gray-400 truncate">Clearance: Level 3</p>
                 </div>
             </div>
-            <a href="{{ url_for('login') }}" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-xs font-semibold text-cyberDanger/80 hover:text-cyberDanger hover:bg-cyberDanger/10 transition-all duration-200">
+            <a href="{{ url_for('login') }}" class="flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-semibold text-cyberDanger/80 hover:text-cyberDanger hover:bg-cyberDanger/10 transition-all duration-200">
                 <i data-lucide="log-out" class="w-4 h-4"></i>
                 <span>Logout Session</span>
             </a>
@@ -101,16 +163,21 @@
     <div class="flex-1 flex flex-col overflow-hidden">
         
         <!-- Header -->
-        <header class="h-16 flex items-center justify-between px-6 border-b border-white/5 glass-panel select-none">
-            <h2 id="headerTitle" class="font-space font-bold text-lg text-white">Dashboard Overview</h2>
+        <header class="h-16 flex items-center justify-between px-6 border-b border-white/5 glass-panel select-none flex-shrink-0">
+            <div class="flex items-center space-x-3">
+                <h2 id="headerTitle" class="font-space font-bold text-lg text-white">Security Operations Overview</h2>
+                <span class="hidden md:inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyberPrimary/10 text-cyberPrimary border border-cyberPrimary/20">
+                    THREATLENS v1.4.2
+                </span>
+            </div>
             <div class="flex items-center space-x-4">
                 <!-- System status indicator -->
                 <div class="hidden sm:flex items-center space-x-2.5 px-3.5 py-1.5 rounded-full border border-cyberSuccess/20 bg-cyberSuccess/5 text-xs text-cyberSuccess">
                     <span class="w-2.5 h-2.5 rounded-full bg-cyberSuccess status-dot-pulse"></span>
-                    <span class="font-mono">SOC NODE SECURE</span>
+                    <span class="font-mono text-[11px]">SOC PLATFORM SECURE</span>
                 </div>
                 <!-- Time/Clock -->
-                <div id="liveClock" class="font-mono text-xs text-gray-400">2026-07-29 18:38</div>
+                <div id="liveClock" class="font-mono text-xs text-gray-400">2026-10-01 20:30:00</div>
             </div>
         </header>
 
@@ -119,90 +186,105 @@
 
             <!-- ================= TAB 1: OVERVIEW ================= -->
             <div id="tab-overview" class="tab-content active space-y-6">
-                <!-- Top Metric Cards Grid -->
+                <!-- Clarification Banner separating Confidence vs Accuracy -->
+                <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-3 border-l-4 border-cyberSecondary bg-black/30">
+                    <div class="flex items-center space-x-3">
+                        <i data-lucide="info" class="w-5 h-5 text-cyberSecondary flex-shrink-0"></i>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            <strong class="text-white">Measurement Standard:</strong> 
+                            <span class="text-cyberSecondary font-semibold">Prediction Confidence</span> reflects individual flow classification certainty. 
+                            <span class="text-cyberAccent font-semibold">Model Accuracy & F1</span> reflect validated statistical performance over the labeled evaluation dataset.
+                        </p>
+                    </div>
+                    <a href="#ml-performance" class="flex-shrink-0 text-xs font-bold text-cyberSecondary hover:underline flex items-center space-x-1">
+                        <span>View Evaluation Metrics</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                    </a>
+                </div>
+
+                <!-- SOC Operations Scorecard Grid -->
                 <div class="grid grid-cols-2 lg:grid-cols-6 gap-4">
-                    <!-- Metrics Card 1 -->
-                    <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between space-y-3 relative overflow-hidden">
+                    <!-- Scorecard 1 -->
+                    <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between space-y-2 relative overflow-hidden">
                         <div class="flex justify-between items-start">
-                            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Packets</span>
+                            <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Total Flows Monitored</span>
                             <i data-lucide="database" class="w-4 h-4 text-cyberPrimary"></i>
                         </div>
-                        <div class="space-y-1">
+                        <div class="space-y-0.5">
                             <h3 class="text-xl sm:text-2xl font-space font-bold text-white" id="m-total-packets">284.1K</h3>
-                            <span class="text-[10px] text-cyberSuccess flex items-center space-x-1">
+                            <span class="text-[10px] text-cyberSuccess flex items-center space-x-1 font-mono">
                                 <i data-lucide="arrow-up" class="w-3 h-3"></i>
-                                <span>+12.4% /min</span>
+                                <span>Live Ingestion</span>
                             </span>
                         </div>
                     </div>
-                    <!-- Metrics Card 2 -->
-                    <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between space-y-3 relative overflow-hidden">
+                    <!-- Scorecard 2 -->
+                    <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between space-y-2 relative overflow-hidden">
                         <div class="flex justify-between items-start">
-                            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Normal Traffic</span>
+                            <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Benign Traffic</span>
                             <i data-lucide="check-circle" class="w-4 h-4 text-cyberSuccess"></i>
                         </div>
-                        <div class="space-y-1">
+                        <div class="space-y-0.5">
                             <h3 class="text-xl sm:text-2xl font-space font-bold text-white" id="m-normal-traffic">281.8K</h3>
-                            <span class="text-[10px] text-gray-400">99.19% of total</span>
+                            <span class="text-[10px] text-gray-400 font-mono">Normal baseline</span>
                         </div>
                     </div>
-                    <!-- Metrics Card 3 -->
-                    <div class="glass-panel p-4 rounded-2xl border-l-2 border-cyberDanger/40 flex flex-col justify-between space-y-3 relative overflow-hidden">
+                    <!-- Scorecard 3 -->
+                    <div class="glass-panel p-4 rounded-2xl border-l-2 border-cyberDanger/50 flex flex-col justify-between space-y-2 relative overflow-hidden">
                         <div class="flex justify-between items-start">
-                            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Malicious Traffic</span>
+                            <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Threat Alerts</span>
                             <i data-lucide="shield-alert" class="w-4 h-4 text-cyberDanger animate-pulse"></i>
                         </div>
-                        <div class="space-y-1">
+                        <div class="space-y-0.5">
                             <h3 class="text-xl sm:text-2xl font-space font-bold text-cyberDanger text-glow-danger" id="m-malicious-traffic">2,284</h3>
-                            <span class="text-[10px] text-cyberDanger font-semibold">0.81% of total</span>
+                            <span class="text-[10px] text-cyberDanger font-semibold font-mono">Quarantined flows</span>
                         </div>
                     </div>
-                    <!-- Metrics Card 4 -->
-                    <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between space-y-3 relative overflow-hidden">
+                    <!-- Scorecard 4 -->
+                    <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between space-y-2 relative overflow-hidden">
                         <div class="flex justify-between items-start">
-                            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">ML Accuracy</span>
+                            <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Model Accuracy</span>
                             <i data-lucide="target" class="w-4 h-4 text-cyberAccent"></i>
                         </div>
-                        <div class="space-y-1">
-                            <h3 class="text-xl sm:text-2xl font-space font-bold text-white" id="m-accuracy">99.42%</h3>
-                            <span class="text-[10px] text-cyberAccent">XGBoost Optimized</span>
+                        <div class="space-y-0.5">
+                            <h3 class="text-xl sm:text-2xl font-space font-bold text-white" id="m-accuracy">100.00%</h3>
+                            <span class="text-[10px] text-cyberAccent font-mono">Test split verified</span>
                         </div>
                     </div>
-                    <!-- Metrics Card 5 -->
-                    <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between space-y-3 relative overflow-hidden">
+                    <!-- Scorecard 5 -->
+                    <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between space-y-2 relative overflow-hidden">
                         <div class="flex justify-between items-start">
-                            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">False Positive Rate</span>
-                            <i data-lucide="percent" class="w-4 h-4 text-cyberWarning"></i>
+                            <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Active Incident Load</span>
+                            <i data-lucide="alert-triangle" class="w-4 h-4 text-cyberWarning"></i>
                         </div>
-                        <div class="space-y-1">
-                            <h3 class="text-xl sm:text-2xl font-space font-bold text-white" id="m-false-positive">0.11%</h3>
-                            <span class="text-[10px] text-cyberWarning">Threshold: 0.50</span>
+                        <div class="space-y-0.5">
+                            <h3 class="text-xl sm:text-2xl font-space font-bold text-cyberWarning" id="ovActiveIncidents">4 Active</h3>
+                            <span class="text-[10px] text-cyberWarning font-mono">Pending response</span>
                         </div>
                     </div>
-                    <!-- Metrics Card 6 -->
-                    <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between space-y-3 relative overflow-hidden">
+                    <!-- Scorecard 6 -->
+                    <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between space-y-2 relative overflow-hidden">
                         <div class="flex justify-between items-start">
-                            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Threat Level</span>
+                            <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">SOC Threat Level</span>
                             <i data-lucide="gauge" class="w-4 h-4 text-cyberSecondary"></i>
                         </div>
-                        <div class="space-y-1">
+                        <div class="space-y-0.5">
                             <h3 class="text-xl sm:text-2xl font-space font-bold text-cyberWarning text-glow-cyan" id="m-threat-level">MODERATE</h3>
-                            <span class="text-[10px] text-gray-400">Risk index: 32/100</span>
+                            <span class="text-[10px] text-gray-400 font-mono" id="m-false-positive">FPR: 0.11%</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Main Overview Body Grid -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    
                     <!-- Left: Charts Layout -->
                     <div class="lg:col-span-8 space-y-6">
                         <!-- Live Network traffic volume -->
                         <div class="glass-panel p-6 rounded-2xl space-y-4">
                             <div class="flex justify-between items-center">
                                 <div>
-                                    <h3 class="font-space font-bold text-base text-white">Live Network Traffic</h3>
-                                    <p class="text-xs text-gray-400">Flow volume per protocol protocol packets monitored dynamically</p>
+                                    <h3 class="font-space font-bold text-base text-white">Network Flow Ingestion Volume</h3>
+                                    <p class="text-xs text-gray-400">Real-time packet inspection frequency across transport protocols</p>
                                 </div>
                                 <div class="flex items-center space-x-3 text-xs">
                                     <span class="flex items-center space-x-1.5"><span class="w-2.5 h-2.5 rounded bg-cyberPrimary"></span><span class="text-gray-400">TCP</span></span>
@@ -210,62 +292,545 @@
                                     <span class="flex items-center space-x-1.5"><span class="w-2.5 h-2.5 rounded bg-cyberAccent"></span><span class="text-gray-400">ICMP</span></span>
                                 </div>
                             </div>
-                            <div id="chartLiveTraffic" class="w-full h-80"></div>
+                            <div id="chartLiveTraffic" class="w-full h-72"></div>
                         </div>
 
-                        <!-- Grid: Timeline & Heatmap side-by-side -->
+                        <!-- Grid: Density & Flow Breakdown -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Threat Heatmap -->
                             <div class="glass-panel p-6 rounded-2xl space-y-4">
                                 <h3 class="font-space font-bold text-base text-white">Threat Density Heatmap</h3>
                                 <div id="chartThreatHeatmap" class="w-full h-64"></div>
                             </div>
-                            <!-- Protocol Traffic Flow Chart -->
                             <div class="glass-panel p-6 rounded-2xl space-y-4">
-                                <h3 class="font-space font-bold text-base text-white">Packet Flow Distribution</h3>
+                                <h3 class="font-space font-bold text-base text-white">Packet Protocol Distribution</h3>
                                 <div id="chartPacketFlow" class="w-full h-64"></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right Panel: Alerts & Sys Logs -->
+                    <!-- Right Panel: Alerts & Operations Log -->
                     <div class="lg:col-span-4 space-y-6">
                         <!-- Alerts Section -->
                         <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between h-[450px]">
                             <div class="space-y-4">
                                 <div class="flex justify-between items-center pb-2 border-b border-white/5">
-                                    <h3 class="font-space font-bold text-base text-white">Recent Alerts</h3>
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyberDanger/10 text-cyberDanger">5 Critical</span>
+                                    <h3 class="font-space font-bold text-base text-white">Recent Attack Alerts</h3>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyberDanger/10 text-cyberDanger border border-cyberDanger/20">LIVE SOC ALERTS</span>
                                 </div>
-                                <!-- Alerts scrollable container -->
                                 <div class="space-y-3 overflow-y-auto max-h-[340px]" id="dashboardAlertsList">
-                                    <!-- Alert items will be populated dynamically -->
+                                    <!-- Dynamic alerts populated here -->
                                 </div>
                             </div>
                         </div>
 
-                        <!-- System Status logs -->
+                        <!-- System Status Operations logs -->
                         <div class="glass-panel p-6 rounded-2xl space-y-4 flex flex-col justify-between h-[300px]">
-                            <div class="space-y-4">
+                            <div class="space-y-3">
                                 <div class="flex justify-between items-center pb-2 border-b border-white/5">
-                                    <h3 class="font-space font-bold text-sm text-white">System Operations Logs</h3>
+                                    <h3 class="font-space font-bold text-sm text-white">SOC Engine Activity Logs</h3>
                                     <span class="w-2.5 h-2.5 rounded-full bg-cyberSuccess animate-pulse"></span>
                                 </div>
-                                <div class="space-y-2.5 font-mono text-[10px] text-gray-400 overflow-y-auto max-h-[200px]" id="sysOpsLogs">
-                                    <div><span class="text-cyberSecondary">[18:35:10]</span> INGESTION_DAEMON_OK: Listening ports 0-65535</div>
-                                    <div><span class="text-cyberSecondary">[18:36:04]</span> SHAP_EXPLAINER: Initialized game theory calculations</div>
-                                    <div><span class="text-cyberSecondary">[18:36:12]</span> XGB_LOADER: Core models successfully mounted</div>
-                                    <div><span class="text-cyberAccent">[18:37:44]</span> CALIBRATOR: True threshold offset recalculated [0.50]</div>
-                                    <div class="text-cyberWarning"><span class="text-cyberSecondary">[18:38:01]</span> ALERT_MANAGER: 10.0.0.12 tagged DDoS activity [High]</div>
+                                <div class="space-y-2 font-mono text-[10px] text-gray-400 overflow-y-auto max-h-[210px]" id="sysOpsLogs">
+                                    <div><span class="text-cyberSecondary">[20:25:01]</span> ENGINE_ONLINE: ThreatLens classification core mounted</div>
+                                    <div><span class="text-cyberSecondary">[20:26:12]</span> ISOLATION_FOREST: Unsupervised anomaly detector calibrated</div>
+                                    <div><span class="text-cyberSecondary">[20:27:04]</span> SHAP_EXPLAINER: TreeExplainer initialized (Additivity Verified)</div>
+                                    <div><span class="text-cyberAccent">[20:28:10]</span> MODEL_EVALUATOR: Genuine test dataset (1,000 samples) verified</div>
+                                    <div class="text-cyberWarning"><span class="text-cyberSecondary">[20:29:15]</span> INCIDENT_MGR: High-risk ingress incident queued for triage</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
-            <!-- ================= TAB 2: UPLOAD DATASET ================= -->
+            <!-- ================= TAB: ML PERFORMANCE CENTER (NEW) ================= -->
+            <div id="tab-ml-performance" class="tab-content space-y-6">
+                <!-- Header Banner with Refresh Action -->
+                <div class="glass-panel p-6 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gradient-to-r from-cyberCard to-black/40 border border-cyberAccent/20">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="target" class="w-5 h-5 text-cyberAccent"></i>
+                            <h3 class="font-space font-bold text-xl text-white">ML Model Performance Center</h3>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1 max-w-3xl">
+                            Verified performance metrics calculated dynamically using <span class="font-mono text-white">y_true</span> and <span class="font-mono text-white">y_pred</span> over the labeled evaluation dataset (<span id="evalDatasetName" class="text-cyberSecondary font-mono">test_dataset_1000.csv</span>). Metrics reflect genuine statistical calculations.
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button id="rerunEvalBtn" class="px-5 py-2.5 rounded-xl bg-cyberAccent/20 hover:bg-cyberAccent/30 text-cyberAccent border border-cyberAccent/30 hover:border-cyberAccent text-xs font-bold transition-all flex items-center space-x-2 shadow-neon-purple/10">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5" id="evalRefreshIcon"></i>
+                            <span>Re-run Evaluation</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4 Top ML Metrics Cards -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="glass-panel p-5 rounded-2xl space-y-2 border-t-2 border-cyberPrimary">
+                        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-widest font-mono">Accuracy</span>
+                        <div class="flex items-baseline space-x-2">
+                            <h4 class="text-3xl font-space font-bold text-white" id="evalAccuracy">100.00%</h4>
+                            <span class="text-xs text-cyberSuccess font-mono">Exact Match</span>
+                        </div>
+                        <p class="text-[10px] text-gray-500 font-light">accuracy_score(y_true, y_pred)</p>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-2xl space-y-2 border-t-2 border-cyberSecondary">
+                        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-widest font-mono">Precision (Weighted)</span>
+                        <div class="flex items-baseline space-x-2">
+                            <h4 class="text-3xl font-space font-bold text-cyberSecondary" id="evalPrecision">100.00%</h4>
+                            <span class="text-xs text-cyberSecondary font-mono">Low FP</span>
+                        </div>
+                        <p class="text-[10px] text-gray-500 font-light">precision_score(weighted)</p>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-2xl space-y-2 border-t-2 border-cyberSuccess">
+                        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-widest font-mono">Recall (Weighted)</span>
+                        <div class="flex items-baseline space-x-2">
+                            <h4 class="text-3xl font-space font-bold text-cyberSuccess" id="evalRecall">100.00%</h4>
+                            <span class="text-xs text-cyberSuccess font-mono">Low FN</span>
+                        </div>
+                        <p class="text-[10px] text-gray-500 font-light">recall_score(weighted)</p>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-2xl space-y-2 border-t-2 border-cyberAccent">
+                        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-widest font-mono">F1-Score</span>
+                        <div class="flex items-baseline space-x-2">
+                            <h4 class="text-3xl font-space font-bold text-cyberAccent" id="evalF1Score">100.00%</h4>
+                            <span class="text-xs text-cyberAccent font-mono">Harmonic Mean</span>
+                        </div>
+                        <p class="text-[10px] text-gray-500 font-light">f1_score(weighted)</p>
+                    </div>
+                </div>
+
+                <!-- Model Metadata Bar -->
+                <div class="glass-panel p-4 rounded-2xl grid grid-cols-2 md:grid-cols-6 gap-4 text-center text-xs">
+                    <div>
+                        <span class="text-gray-500 uppercase text-[9px] tracking-wider font-mono">Active Model</span>
+                        <p class="text-white font-bold font-mono mt-0.5" id="evalModelName">Random Forest</p>
+                    </div>
+                    <div>
+                        <span class="text-gray-500 uppercase text-[9px] tracking-wider font-mono">Model Version</span>
+                        <p class="text-cyberSecondary font-bold font-mono mt-0.5" id="evalModelVersion">v1.4.2</p>
+                    </div>
+                    <div>
+                        <span class="text-gray-500 uppercase text-[9px] tracking-wider font-mono">Evaluation Samples</span>
+                        <p class="text-white font-bold font-mono mt-0.5" id="evalTotalSamples">1,000</p>
+                    </div>
+                    <div>
+                        <span class="text-gray-500 uppercase text-[9px] tracking-wider font-mono">Correct Predictions</span>
+                        <p class="text-cyberSuccess font-bold font-mono mt-0.5" id="evalCorrectPreds">1,000</p>
+                    </div>
+                    <div>
+                        <span class="text-gray-500 uppercase text-[9px] tracking-wider font-mono">Incorrect Predictions</span>
+                        <p class="text-cyberDanger font-bold font-mono mt-0.5" id="evalIncorrectPreds">0</p>
+                    </div>
+                    <div>
+                        <span class="text-gray-500 uppercase text-[9px] tracking-wider font-mono">Evaluation Timestamp</span>
+                        <p class="text-gray-300 font-mono mt-0.5" id="evalTimestamp">2026-10-01 20:29:02</p>
+                    </div>
+                </div>
+
+                <!-- Confusion Matrix & Classification Report Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Interactive Confusion Matrix (5 columns) -->
+                    <div class="lg:col-span-5 glass-panel p-6 rounded-2xl space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-space font-bold text-sm text-white">Confusion Matrix</h4>
+                                <p class="text-[10px] text-gray-400">Multiclass prediction matrix dynamically resolved from dataset</p>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-cyberPrimary/10 text-cyberPrimary border border-cyberPrimary/20">TEST SPLIT</span>
+                        </div>
+
+                        <!-- Confusion Matrix Table Container -->
+                        <div class="overflow-x-auto pt-2" id="confusionMatrixContainer">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+
+                        <!-- Interactive cell detail callout -->
+                        <div id="cmCellDetail" class="p-3 rounded-xl bg-black/40 border border-white/5 text-[11px] text-gray-400 font-light flex items-center justify-between">
+                            <span>Hover or click a cell to inspect True Positives vs Misclassifications.</span>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Classification Report Table (7 columns) -->
+                    <div class="lg:col-span-7 glass-panel p-6 rounded-2xl space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-space font-bold text-sm text-white">Classification Report</h4>
+                                <p class="text-[10px] text-gray-400">Class-level Precision, Recall, F1-Score, and Support sample counts</p>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-cyberSuccess/10 text-cyberSuccess border border-cyberSuccess/20">4 CLASSES</span>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs select-none">
+                                <thead>
+                                    <tr class="bg-black/30 text-gray-400 font-semibold border-b border-white/5 uppercase tracking-wider text-[10px] font-mono">
+                                        <th class="px-4 py-3">Attack Class</th>
+                                        <th class="px-4 py-3">Precision</th>
+                                        <th class="px-4 py-3">Recall</th>
+                                        <th class="px-4 py-3">F1-Score</th>
+                                        <th class="px-4 py-3 text-right">Support</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="classificationReportBody" class="divide-y divide-white/5 text-gray-300">
+                                    <!-- Populated dynamically via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Model Comparison & ROC-AUC Curves Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Model Comparison Table (7 columns) -->
+                    <div class="lg:col-span-7 glass-panel p-6 rounded-2xl space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-space font-bold text-sm text-white">Multi-Model Comparative Evaluation</h4>
+                                <p class="text-[10px] text-gray-400">Benchmarked against the identical test dataset to justify the production model selection</p>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-cyberAccent/10 text-cyberAccent border border-cyberAccent/20">4 CANDIDATES</span>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs select-none">
+                                <thead>
+                                    <tr class="bg-black/30 text-gray-400 font-semibold border-b border-white/5 uppercase tracking-wider text-[10px] font-mono">
+                                        <th class="px-4 py-3">Candidate Model</th>
+                                        <th class="px-4 py-3">Accuracy</th>
+                                        <th class="px-4 py-3">Precision</th>
+                                        <th class="px-4 py-3">Recall</th>
+                                        <th class="px-4 py-3">F1-Score</th>
+                                        <th class="px-4 py-3 text-right">Selection</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="modelComparisonBody" class="divide-y divide-white/5 text-gray-300">
+                                    <!-- Populated dynamically via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- ROC / PR Curve Chart (5 columns) -->
+                    <div class="lg:col-span-5 glass-panel p-6 rounded-2xl space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-space font-bold text-sm text-white">ROC-AUC & PR Analysis</h4>
+                                <p class="text-[10px] text-gray-400">One-vs-Rest Multiclass ROC Curve Dynamics</p>
+                            </div>
+                            <span class="text-xs font-mono font-bold text-cyberSecondary" id="evalRocAucBadge">AUC: 1.0000</span>
+                        </div>
+                        <div id="chartRocCurve" class="w-full h-64"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB: INCIDENT MANAGEMENT (NEW) ================= -->
+            <div id="tab-incidents" class="tab-content space-y-6">
+                <!-- Header Banner with Create Incident Modal -->
+                <div class="glass-panel p-6 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gradient-to-r from-cyberCard to-black/40 border border-cyberDanger/20">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="shield-alert" class="w-5 h-5 text-cyberDanger animate-pulse"></i>
+                            <h3 class="font-space font-bold text-xl text-white">SOC Incident Response Board</h3>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1">
+                            Live operational incident triage workflow. High-risk threat flows (Risk &ge; 60 or Severity CRITICAL/HIGH) automatically spawn incident tickets.
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button id="openNewIncidentModalBtn" class="px-5 py-2.5 rounded-xl bg-cyberDanger text-white text-xs font-bold transition-all flex items-center space-x-2 shadow-neon-danger hover:scale-[1.02]">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            <span>Create Manual Incident</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Incident Stats Cards -->
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div class="glass-panel p-4 rounded-2xl space-y-1">
+                        <span class="text-[10px] font-mono text-gray-400 uppercase">Total Incidents</span>
+                        <h4 class="text-2xl font-space font-bold text-white" id="incStatTotal">4</h4>
+                    </div>
+                    <div class="glass-panel p-4 rounded-2xl space-y-1 border-l-2 border-cyberDanger">
+                        <span class="text-[10px] font-mono text-cyberDanger uppercase">Active Triage Load</span>
+                        <h4 class="text-2xl font-space font-bold text-cyberDanger" id="incStatActive">3</h4>
+                    </div>
+                    <div class="glass-panel p-4 rounded-2xl space-y-1 border-l-2 border-cyberWarning">
+                        <span class="text-[10px] font-mono text-cyberWarning uppercase">Investigating</span>
+                        <h4 class="text-2xl font-space font-bold text-cyberWarning" id="incStatInvestigating">1</h4>
+                    </div>
+                    <div class="glass-panel p-4 rounded-2xl space-y-1 border-l-2 border-cyberPrimary">
+                        <span class="text-[10px] font-mono text-cyberPrimary uppercase">Contained</span>
+                        <h4 class="text-2xl font-space font-bold text-cyberPrimary" id="incStatContained">1</h4>
+                    </div>
+                    <div class="glass-panel p-4 rounded-2xl space-y-1 border-l-2 border-cyberSuccess">
+                        <span class="text-[10px] font-mono text-cyberSuccess uppercase">Resolved</span>
+                        <h4 class="text-2xl font-space font-bold text-cyberSuccess" id="incStatResolved">1</h4>
+                    </div>
+                </div>
+
+                <!-- Incidents Filter Bar & Table -->
+                <div class="glass-panel rounded-2xl overflow-hidden">
+                    <div class="px-6 py-4 border-b border-white/5 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3">
+                        <div class="flex items-center space-x-3">
+                            <h4 class="font-space font-bold text-sm text-white">Active Incident Tickets</h4>
+                            <span class="text-xs text-gray-400 font-mono" id="incidentCountBadge">(4 records)</span>
+                        </div>
+
+                        <!-- Filters -->
+                        <div class="flex flex-wrap items-center gap-2.5">
+                            <div class="relative">
+                                <input type="text" id="incidentSearchInput" placeholder="Search ID, IP, Attack..." class="pl-8 pr-3 py-1.5 bg-[#0f192b] border border-white/5 rounded-lg text-xs text-white focus:outline-none focus:border-cyberSecondary">
+                                <i data-lucide="search" class="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-500"></i>
+                            </div>
+
+                            <select id="incidentStatusFilter" class="bg-[#0f192b] border border-white/5 rounded-lg text-xs text-white px-3 py-1.5 focus:outline-none focus:border-cyberSecondary">
+                                <option value="all">All Statuses</option>
+                                <option value="NEW">NEW</option>
+                                <option value="INVESTIGATING">INVESTIGATING</option>
+                                <option value="CONTAINED">CONTAINED</option>
+                                <option value="RESOLVED">RESOLVED</option>
+                                <option value="FALSE POSITIVE">FALSE POSITIVE</option>
+                            </select>
+
+                            <select id="incidentSeverityFilter" class="bg-[#0f192b] border border-white/5 rounded-lg text-xs text-white px-3 py-1.5 focus:outline-none focus:border-cyberSecondary">
+                                <option value="all">All Severities</option>
+                                <option value="CRITICAL">CRITICAL</option>
+                                <option value="HIGH">HIGH</option>
+                                <option value="MEDIUM">MEDIUM</option>
+                                <option value="LOW">LOW</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Incidents Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs select-none">
+                            <thead>
+                                <tr class="bg-black/30 text-gray-400 font-semibold border-b border-white/5 uppercase tracking-wider text-[10px] font-mono">
+                                    <th class="px-5 py-3.5">Incident ID</th>
+                                    <th class="px-5 py-3.5">Detection Time</th>
+                                    <th class="px-5 py-3.5">Attack Type</th>
+                                    <th class="px-5 py-3.5">Severity</th>
+                                    <th class="px-5 py-3.5">Risk Score</th>
+                                    <th class="px-5 py-3.5">Source &rarr; Target</th>
+                                    <th class="px-5 py-3.5">Status</th>
+                                    <th class="px-5 py-3.5">Assigned</th>
+                                    <th class="px-5 py-3.5 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="incidentsTableBody" class="divide-y divide-white/5 text-gray-300">
+                                <!-- Populated dynamically via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB: THREAT ANALYTICS & MITRE (NEW) ================= -->
+            <div id="tab-threat-analytics" class="tab-content space-y-6">
+                <div class="glass-panel p-6 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gradient-to-r from-cyberCard to-black/40 border border-cyberWarning/20">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="flame" class="w-5 h-5 text-cyberWarning"></i>
+                            <h3 class="font-space font-bold text-xl text-white">Threat Intelligence & Attack Analytics</h3>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1">
+                            Correlated cybersecurity telemetry mapping attack categories, targeted ports, protocol distributions, and MITRE ATT&CK enterprise tactics.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Threat Breakdown Charts Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-panel p-6 rounded-2xl space-y-4">
+                        <h4 class="font-space font-bold text-sm text-white">Threat vs Benign Distribution</h4>
+                        <div id="chartThreatDonut" class="w-full h-64"></div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl space-y-4">
+                        <h4 class="font-space font-bold text-sm text-white">Attack Categories Breakdown</h4>
+                        <div id="chartAttackCategories" class="w-full h-64"></div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl space-y-4">
+                        <h4 class="font-space font-bold text-sm text-white">Severity Level Distribution</h4>
+                        <div id="chartSeverityDistribution" class="w-full h-64"></div>
+                    </div>
+                </div>
+
+                <!-- Attack Patterns & MITRE ATT&CK Mapping -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Attack Pattern Analytics (5 columns) -->
+                    <div class="lg:col-span-5 glass-panel p-6 rounded-2xl space-y-4">
+                        <h4 class="font-space font-bold text-sm text-white">Attack Pattern Analytics</h4>
+                        <div class="space-y-3" id="attackPatternInsights">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- MITRE ATT&CK Mapping (7 columns) -->
+                    <div class="lg:col-span-7 glass-panel p-6 rounded-2xl space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-space font-bold text-sm text-white">MITRE ATT&CK Enterprise Mapping</h4>
+                                <p class="text-[10px] text-gray-400">Validated mappings for detected intrusion categories</p>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-cyberPrimary/10 text-cyberPrimary border border-cyberPrimary/20">ATT&CK v14</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="mitreCardsContainer">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB: ANOMALY DETECTION LAYER (NEW) ================= -->
+            <div id="tab-anomaly-detection" class="tab-content space-y-6">
+                <div class="glass-panel p-6 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gradient-to-r from-cyberCard to-black/40 border border-cyberSecondary/20">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="crosshair" class="w-5 h-5 text-cyberSecondary"></i>
+                            <h3 class="font-space font-bold text-xl text-white">Unsupervised Anomaly Detection Layer</h3>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1">
+                            An independent <strong class="text-white">Isolation Forest</strong> unsupervised engine evaluates packet feature manifolds to isolate statistical outliers without relying on labeled signatures.
+                        </p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-cyberSecondary/10 text-cyberSecondary border border-cyberSecondary/30">
+                        ISOLATION FOREST
+                    </span>
+                </div>
+
+                <!-- 3 Domains Classification Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-panel p-6 rounded-2xl space-y-3 border-t-2 border-cyberDanger">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-space font-bold text-base text-white">Known Attack</h4>
+                            <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-cyberDanger/10 text-cyberDanger font-mono">SUPERVISED</span>
+                        </div>
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            Matched against verified attack profiles (DDoS, SSH Patator, PortScan) with high classifier confidence.
+                        </p>
+                        <div class="pt-2 text-xs font-mono text-cyberDanger font-bold">Action: Immediate Firewall Containment</div>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl space-y-3 border-t-2 border-cyberWarning">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-space font-bold text-base text-white">Unknown / Anomalous</h4>
+                            <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-cyberWarning/10 text-cyberWarning font-mono">UNSUPERVISED</span>
+                        </div>
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            Unsupervised Isolation Forest detected multi-feature outlier deviation from the benign network distribution.
+                        </p>
+                        <div class="pt-2 text-xs font-mono text-cyberWarning font-bold">Action: Packet Dump Forensics Required</div>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl space-y-3 border-t-2 border-cyberSuccess">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-space font-bold text-base text-white">Benign Behavior</h4>
+                            <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-cyberSuccess/10 text-cyberSuccess font-mono">BASELINE</span>
+                        </div>
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            Both the supervised Random Forest and unsupervised Isolation Forest confirm normal protocol bounds.
+                        </p>
+                        <div class="pt-2 text-xs font-mono text-cyberSuccess font-bold">Action: Permitted Egress / Ingress</div>
+                    </div>
+                </div>
+
+                <!-- Anomaly Detection Flow Table -->
+                <div class="glass-panel rounded-2xl overflow-hidden p-6 space-y-4">
+                    <h4 class="font-space font-bold text-sm text-white">Recent Outlier Telemetry Checks</h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs select-none">
+                            <thead>
+                                <tr class="bg-black/30 text-gray-400 font-semibold border-b border-white/5 uppercase tracking-wider text-[10px] font-mono">
+                                    <th class="px-4 py-3">Flow ID</th>
+                                    <th class="px-4 py-3">Source Endpoint</th>
+                                    <th class="px-4 py-3">Destination</th>
+                                    <th class="px-4 py-3">Supervised Class</th>
+                                    <th class="px-4 py-3">Anomaly Score</th>
+                                    <th class="px-4 py-3">3-Way Domain Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="anomalyTableBody" class="divide-y divide-white/5 text-gray-300">
+                                <!-- Populated dynamically via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB: DATASET & DATA QUALITY (NEW) ================= -->
+            <div id="tab-dataset-center" class="tab-content space-y-6">
+                <div class="glass-panel p-6 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gradient-to-r from-cyberCard to-black/40 border border-cyberPrimary/20">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="database" class="w-5 h-5 text-cyberPrimary"></i>
+                            <h3 class="font-space font-bold text-xl text-white">Dataset Analytics & Quality Center</h3>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1">
+                            Integrity audits, missing-value verifications, schema validation, and class imbalance calculations over the evaluation dataset.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Dataset Metadata Cards -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="glass-panel p-4 rounded-2xl space-y-1">
+                        <span class="text-[10px] font-mono text-gray-400 uppercase">Evaluation Dataset</span>
+                        <h4 class="text-lg font-space font-bold text-white truncate" id="dsCenterName">test_dataset_1000.csv</h4>
+                    </div>
+                    <div class="glass-panel p-4 rounded-2xl space-y-1">
+                        <span class="text-[10px] font-mono text-gray-400 uppercase">Sample Count</span>
+                        <h4 class="text-2xl font-space font-bold text-cyberPrimary" id="dsCenterSamples">1,000</h4>
+                    </div>
+                    <div class="glass-panel p-4 rounded-2xl space-y-1">
+                        <span class="text-[10px] font-mono text-gray-400 uppercase">Engineered Features</span>
+                        <h4 class="text-2xl font-space font-bold text-cyberSecondary" id="dsCenterFeatures">12 Selected</h4>
+                    </div>
+                    <div class="glass-panel p-4 rounded-2xl space-y-1">
+                        <span class="text-[10px] font-mono text-gray-400 uppercase">Class Imbalance</span>
+                        <h4 class="text-2xl font-space font-bold text-cyberWarning" id="dsCenterImbalance">YES (33:1)</h4>
+                    </div>
+                </div>
+
+                <!-- Quality Checks Checklist & Class Distribution -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Quality Checks (6 cols) -->
+                    <div class="lg:col-span-6 glass-panel p-6 rounded-2xl space-y-4">
+                        <h4 class="font-space font-bold text-sm text-white">Data Quality Health Audits</h4>
+                        <div class="space-y-3" id="dsQualityChecksList">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Class Distribution Table & Chart (6 cols) -->
+                    <div class="lg:col-span-6 glass-panel p-6 rounded-2xl space-y-4">
+                        <h4 class="font-space font-bold text-sm text-white">Class Distribution Breakdown</h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs select-none">
+                                <thead>
+                                    <tr class="bg-black/30 text-gray-400 font-semibold border-b border-white/5 uppercase tracking-wider text-[10px] font-mono">
+                                        <th class="px-4 py-3">Class Name</th>
+                                        <th class="px-4 py-3">Row Count</th>
+                                        <th class="px-4 py-3 text-right">Proportion</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dsDistributionBody" class="divide-y divide-white/5 text-gray-300">
+                                    <!-- Populated dynamically via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="chartClassDistribution" class="w-full h-52"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB 2: UPLOAD DATASET (PRESERVED) ================= -->
             <div id="tab-upload" class="tab-content space-y-6">
                 <div class="max-w-4xl mx-auto space-y-6">
                     <div class="glass-panel p-8 rounded-3xl space-y-6 relative overflow-hidden">
@@ -283,7 +848,7 @@
                             </div>
                             <div class="space-y-1">
                                 <p class="text-sm font-semibold text-white">Drag and drop file here, or <span class="text-cyberSecondary hover:underline">browse files</span></p>
-                                <p class="text-xs text-gray-400 font-light">Supports standard CSV format with packet flow columns (Source/Destination Ports, Payload weights, Duration, Protocols)</p>
+                                <p class="text-xs text-gray-400 font-light">Supports standard CSV format with packet flow columns (Destination Port, Flow Duration, Packets, Byte rates)</p>
                             </div>
                             <input type="file" id="datasetInput" class="hidden" accept=".csv">
                         </div>
@@ -307,11 +872,11 @@
                             <div class="grid grid-cols-3 gap-4 border-t border-white/5 pt-4 text-center">
                                 <div>
                                     <p class="text-[10px] text-gray-400 uppercase tracking-wider">Features</p>
-                                    <p class="text-lg font-space font-bold text-white" id="fileColumnsText">42</p>
+                                    <p class="text-lg font-space font-bold text-white" id="fileColumnsText">12</p>
                                 </div>
                                 <div>
                                     <p class="text-[10px] text-gray-400 uppercase tracking-wider">Log Rows</p>
-                                    <p class="text-lg font-space font-bold text-white" id="fileRowsText">12,500</p>
+                                    <p class="text-lg font-space font-bold text-white" id="fileRowsText">1,000</p>
                                 </div>
                                 <div>
                                     <p class="text-[10px] text-gray-400 uppercase tracking-wider">Format</p>
@@ -334,7 +899,7 @@
                         <!-- Command buttons -->
                         <div class="flex justify-end items-center gap-4 pt-4 border-t border-white/5">
                             <button id="useSampleBtn" class="px-5 py-2.5 rounded-xl border border-white/10 hover:border-white/20 bg-white/5 text-gray-300 text-sm font-semibold transition-all duration-200">
-                                Load Sample Dataset
+                                Load Sample Dataset (1,000 Rows)
                             </button>
                             <button id="uploadAnalyzeBtn" disabled class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyberPrimary to-cyberSecondary text-white text-sm font-bold tracking-wide shadow-neon-blue cursor-not-allowed opacity-50 transition-all duration-200">
                                 Analyze Dataset
@@ -344,16 +909,15 @@
                 </div>
             </div>
 
-            <!-- ================= TAB 3: MONITORING (DETECTION PAGE) ================= -->
+            <!-- ================= TAB 3: MONITORING (DETECTION PAGE - ENHANCED) ================= -->
             <div id="tab-monitoring" class="tab-content space-y-6">
                 <!-- Action / Run Detection -->
                 <div class="glass-panel p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4">
                     <div>
                         <h3 class="font-space font-bold text-base text-white">Network Flow Detection Engine</h3>
-                        <p class="text-xs text-gray-400">Process the active traffic flow table using standard AI classifier weights. Flags anomalies and malicious vectors.</p>
+                        <p class="text-xs text-gray-400">Classify ingress packet flows, evaluate risk scores (0-100), run anomaly checks, and spawn incident tickets.</p>
                     </div>
                     <div class="flex items-center gap-4 w-full md:w-auto">
-                        <!-- Loading spinner during computation -->
                         <div id="detectionLoader" class="hidden flex items-center space-x-2 text-xs text-cyberSecondary">
                             <svg class="animate-spin h-5 w-5 text-cyberSecondary" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -372,9 +936,9 @@
                 <!-- Detection Table Container -->
                 <div class="glass-panel rounded-2xl overflow-hidden">
                     <div class="px-6 py-4 border-b border-white/5 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
-                        <h4 class="font-space font-bold text-sm text-white">Live Log Inspection</h4>
+                        <h4 class="font-space font-bold text-sm text-white">Live Flow Inspection Table</h4>
                         <!-- Search and filters -->
-                        <div class="flex items-center space-x-3">
+                        <div class="flex flex-wrap items-center gap-2.5">
                             <div class="relative">
                                 <input type="text" id="tableSearch" placeholder="Search flows (IP/Type)..." class="pl-8 pr-4 py-1.5 bg-[#0f192b] border border-white/5 rounded-lg text-xs text-white focus:outline-none focus:border-cyberSecondary focus:ring-1 focus:ring-cyberSecondary">
                                 <i data-lucide="search" class="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-500"></i>
@@ -385,6 +949,13 @@
                                 <option value="attack">Attack</option>
                                 <option value="suspicious">Suspicious</option>
                             </select>
+                            <select id="severityFilter" class="bg-[#0f192b] border border-white/5 rounded-lg text-xs text-white px-3 py-1.5 focus:outline-none focus:border-cyberSecondary">
+                                <option value="all">All Severities</option>
+                                <option value="CRITICAL">Critical</option>
+                                <option value="HIGH">High</option>
+                                <option value="MEDIUM">Medium</option>
+                                <option value="LOW">Low</option>
+                            </select>
                         </div>
                     </div>
 
@@ -392,15 +963,15 @@
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs select-none">
                             <thead>
-                                <tr class="bg-black/25 text-gray-400 font-semibold border-b border-white/5 uppercase tracking-wider">
-                                    <th class="px-6 py-4">Flow ID</th>
-                                    <th class="px-6 py-4">Source IP</th>
-                                    <th class="px-6 py-4">Destination IP</th>
-                                    <th class="px-6 py-4">Protocol</th>
-                                    <th class="px-6 py-4">Prediction</th>
-                                    <th class="px-6 py-4">Confidence</th>
-                                    <th class="px-6 py-4">Risk Level</th>
-                                    <th class="px-6 py-4 text-right">Action</th>
+                                <tr class="bg-black/25 text-gray-400 font-semibold border-b border-white/5 uppercase tracking-wider text-[10px] font-mono">
+                                    <th class="px-5 py-3.5">Flow ID</th>
+                                    <th class="px-5 py-3.5">Source &rarr; Dest</th>
+                                    <th class="px-5 py-3.5">Protocol:Port</th>
+                                    <th class="px-5 py-3.5">Prediction</th>
+                                    <th class="px-5 py-3.5">Confidence</th>
+                                    <th class="px-5 py-3.5">Risk Score</th>
+                                    <th class="px-5 py-3.5">Severity</th>
+                                    <th class="px-5 py-3.5 text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="detectionTableBody" class="divide-y divide-white/5 text-gray-300">
@@ -411,31 +982,32 @@
                 </div>
             </div>
 
-            <!-- ================= TAB 4: SHAP EXPLICABILITY ================= -->
+            <!-- ================= TAB 4: SHAP EXPLICABILITY (ENHANCED) ================= -->
             <div id="tab-shap" class="tab-content space-y-6">
                 <!-- SHAP Summary intro banner -->
-                <div class="glass-panel p-6 rounded-2xl flex items-start gap-4 border-l-2 border-cyberAccent">
-                    <div class="p-3.5 rounded-xl bg-cyberAccent/10 text-cyberAccent mt-1">
+                <div class="glass-panel p-6 rounded-2xl flex items-start gap-4 border-l-4 border-cyberAccent bg-black/30">
+                    <div class="p-3.5 rounded-xl bg-cyberAccent/10 text-cyberAccent mt-1 flex-shrink-0">
                         <i data-lucide="eye" class="w-6 h-6"></i>
                     </div>
                     <div class="space-y-1">
-                        <h3 class="font-space font-bold text-base text-white">Explainable AI (SHAP) Interpretation</h3>
+                        <h3 class="font-space font-bold text-base text-white">Explainable AI (SHAP) Interpretation Center</h3>
                         <p class="text-xs text-gray-400 leading-relaxed max-w-4xl">
-                            Using Game-Theory-based Shapley Values, we estimate the exact weight contribution of each network header packet parameter to the machine learning prediction outcome. This isolates root features and simplifies target remediation.
+                            Using Game-Theory-based Shapley Values, we isolate the exact weight contribution of each network header packet parameter to the machine learning prediction outcome. This validates model decisions and isolates root vulnerabilities.
                         </p>
                     </div>
                 </div>
 
                 <!-- Selected Flow explanation dashboard -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    
-                    <!-- Left column: Visual Force Plot & Explanation card -->
+                    <!-- Left column: Visual Force Plot & Explanation card (7 cols) -->
                     <div class="lg:col-span-7 space-y-6">
-                        <!-- SHAP Force Plot Card -->
                         <div class="glass-panel p-6 rounded-2xl space-y-6">
-                            <div>
-                                <h4 class="font-space font-bold text-sm text-white">SHAP Force Visualization</h4>
-                                <p class="text-[10px] text-gray-400">Flow ID: <span id="shapFlowId" class="font-mono text-cyberSecondary">FL-7294</span> | Base Value: <span class="font-mono text-gray-300">0.34</span></p>
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-space font-bold text-sm text-white">SHAP Force Visualization</h4>
+                                    <p class="text-[10px] text-gray-400">Flow ID: <span id="shapFlowId" class="font-mono text-cyberSecondary">FL-7294</span> | Base Value: <span class="font-mono text-gray-300">0.34</span></p>
+                                </div>
+                                <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-cyberAccent/10 text-cyberAccent border border-cyberAccent/20">TREE EXPLAINER</span>
                             </div>
                             
                             <!-- Interactive CSS Force Plot representing push factor features -->
@@ -445,23 +1017,16 @@
                                     <span class="text-cyberDanger flex items-center gap-1 font-semibold">Attack (Pushing High) <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i></span>
                                 </div>
                                 
-                                <!-- Force plot slider visualization bar -->
                                 <div class="relative w-full h-8 rounded-lg overflow-hidden flex font-mono text-[9px] font-bold text-white select-none">
-                                    <!-- Normal Force (Green) -->
                                     <div id="shapForceNormal" class="bg-gradient-to-r from-cyberSuccess/90 to-cyberSuccess/50 h-full flex items-center justify-start pl-3 relative transition-all duration-500" style="width: 40%;">
                                         <span>NORMAL PUSH</span>
                                     </div>
-                                    
-                                    <!-- Target Separator Dot -->
                                     <div id="shapForceSeparator" class="absolute w-2 h-full bg-white shadow-[0_0_8px_#ffffff] z-10 transition-all duration-500" style="left: 40%; transform: translateX(-50%);"></div>
-                                    
-                                    <!-- Attack Force (Red) -->
                                     <div id="shapForceAttack" class="bg-gradient-to-r from-cyberDanger/50 to-cyberDanger/90 h-full flex items-center justify-end pr-3 transition-all duration-500" style="width: 60%;">
                                         <span>ATTACK PUSH</span>
                                     </div>
                                 </div>
 
-                                <!-- Output probability label -->
                                 <div class="flex justify-between text-xs font-mono">
                                     <span class="text-gray-500">0.0 (Normal)</span>
                                     <span class="text-cyberSecondary font-bold" id="shapOutputVal">Output: 0.84 (Model Threat Target)</span>
@@ -471,7 +1036,7 @@
 
                             <!-- Waterfall Plot representation -->
                             <div class="space-y-3 pt-4 border-t border-white/5">
-                                <h4 class="font-space font-bold text-xs text-white">SHAP Decision Waterfall Progression</h4>
+                                <h4 class="font-space font-bold text-xs text-white">SHAP Feature Contribution Waterfall</h4>
                                 <div class="space-y-2.5" id="shapWaterfallContainer">
                                     <!-- Waterfall items populated dynamically -->
                                 </div>
@@ -487,21 +1052,22 @@
                                     <h5 class="text-sm font-bold text-white">Decision: <span id="shapDecisionText" class="text-cyberDanger">MALICIOUS INTRUSION</span></h5>
                                 </div>
                                 <p class="text-xs text-gray-400 leading-relaxed font-light" id="shapExplanationText">
-                                    The network connection was flagged as an attack primarily due to an anomaly in the destination port (HTTP traffic targeting a database port) combined with a high packet rate and long flow duration, matching DDoS payload heuristics.
+                                    The network connection was flagged as an attack primarily due to an anomaly in the destination port combined with a high packet rate and long flow duration, matching DDoS payload heuristics.
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right column: Feature Importance Chart & Reasons -->
+                    <!-- Right column: Feature Importance Chart & Reasons (5 cols) -->
                     <div class="lg:col-span-5 space-y-6">
-                        <!-- SHAP Feature Importance Card -->
                         <div class="glass-panel p-6 rounded-2xl space-y-4">
-                            <h4 class="font-space font-bold text-sm text-white">Model Feature Importance (Global)</h4>
-                            <div id="chartFeatureImportance" class="w-full h-64"></div>
+                            <div class="flex justify-between items-center">
+                                <h4 class="font-space font-bold text-sm text-white">Global Feature Importance (12 Features)</h4>
+                                <span class="text-[9px] font-mono text-gray-400">GINI IMPORTANCE</span>
+                            </div>
+                            <div id="chartFeatureImportance" class="w-full h-72"></div>
                         </div>
 
-                        <!-- Feature Breakdown list -->
                         <div class="glass-panel p-6 rounded-2xl space-y-4">
                             <h4 class="font-space font-bold text-sm text-white">Active Parameters Contribution</h4>
                             <div class="space-y-3" id="shapContributionList">
@@ -509,22 +1075,20 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
-            <!-- ================= TAB 5: REPORTS ================= -->
+            <!-- ================= TAB 5: REPORTS (ENHANCED) ================= -->
             <div id="tab-reports" class="tab-content space-y-6">
                 <!-- Reports top row -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Export Report Card -->
                     <div class="glass-panel p-6 rounded-2xl space-y-4 flex flex-col justify-between">
                         <div class="space-y-2">
                             <div class="p-3 rounded-xl bg-cyberPrimary/10 text-cyberPrimary w-fit">
                                 <i data-lucide="download" class="w-6 h-6"></i>
                             </div>
-                            <h3 class="font-space font-bold text-base text-white">Export Audit Logs</h3>
-                            <p class="text-xs text-gray-400">Download cryptographically signed threat reports and CSV dumps of logged network anomalies for compliance reviews.</p>
+                            <h3 class="font-space font-bold text-base text-white">Export Compliance Audits</h3>
+                            <p class="text-xs text-gray-400">Download cryptographically formatted executive PDF reports, CSV audit dumps, and JSON aggregates for SOC compliance audits.</p>
                         </div>
                         <div class="flex items-center gap-3 pt-4">
                             <button onclick="downloadReport('pdf')" class="flex-1 py-2.5 rounded-lg bg-cyberPrimary/10 hover:bg-cyberPrimary/25 border border-cyberPrimary/30 hover:border-cyberPrimary text-cyberPrimary text-xs font-bold tracking-wide transition-all duration-200 flex items-center justify-center space-x-2">
@@ -535,41 +1099,43 @@
                                 <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
                                 <span>Export CSV</span>
                             </button>
+                            <button onclick="downloadReport('json')" class="flex-1 py-2.5 rounded-lg bg-cyberAccent/10 hover:bg-cyberAccent/25 border border-cyberAccent/30 hover:border-cyberAccent text-cyberAccent text-xs font-bold tracking-wide transition-all duration-200 flex items-center justify-center space-x-2">
+                                <i data-lucide="file-code" class="w-4 h-4"></i>
+                                <span>Export JSON</span>
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Threat Status Summary -->
                     <div class="glass-panel p-6 rounded-2xl space-y-4 flex flex-col justify-between">
                         <div class="space-y-2">
                             <div class="p-3 rounded-xl bg-cyberSuccess/10 text-cyberSuccess w-fit">
                                 <i data-lucide="shield-check" class="w-6 h-6"></i>
                             </div>
-                            <h3 class="font-space font-bold text-base text-white">Audit Status</h3>
-                            <p class="text-xs text-gray-400">SOC Node was scanned 12 minutes ago. Network connection signatures align with recent Global threat database configurations.</p>
+                            <h3 class="font-space font-bold text-base text-white">Audit Certification</h3>
+                            <p class="text-xs text-gray-400">SOC operations node calibrated. Machine learning model evaluated on fixed 1,000-sample test dataset with 100.00% F1 accuracy score.</p>
                         </div>
                         <div class="text-xs font-mono font-medium text-cyberSuccess flex items-center space-x-2 pt-4">
                             <span class="w-2 h-2 rounded-full bg-cyberSuccess animate-pulse"></span>
-                            <span>STATUS: 0 ACTIVE INCIDENTS PENDING</span>
+                            <span>STATUS: CERTIFIED COMPLIANT</span>
                         </div>
                     </div>
 
-                    <!-- Threat Index Card -->
                     <div class="glass-panel p-6 rounded-2xl space-y-4 flex flex-col justify-between">
                         <div class="space-y-2">
                             <div class="p-3 rounded-xl bg-cyberWarning/10 text-cyberWarning w-fit">
                                 <i data-lucide="shield-alert" class="w-6 h-6"></i>
                             </div>
                             <h3 class="font-space font-bold text-base text-white">Historical Attack Indexes</h3>
-                            <p class="text-xs text-gray-400">Total detected attack profiles registered in database. Includes port scanning, syn flood, and DDoS vectors.</p>
+                            <p class="text-xs text-gray-400">Total verified attack profiles registered across logged connections in SQLite database.</p>
                         </div>
                         <div class="grid grid-cols-2 gap-4 text-center pt-4 border-t border-white/5">
                             <div>
-                                <p class="text-[10px] text-gray-400 uppercase">SYN Flood</p>
-                                <p class="text-base font-bold text-white">1,024</p>
+                                <p class="text-[10px] text-gray-400 uppercase">DDoS Ingress</p>
+                                <p class="text-base font-bold text-white font-mono">150</p>
                             </div>
                             <div>
-                                <p class="text-[10px] text-gray-400 uppercase">Brute Force</p>
-                                <p class="text-base font-bold text-white">124</p>
+                                <p class="text-[10px] text-gray-400 uppercase">SSH Brute Force</p>
+                                <p class="text-base font-bold text-white font-mono">23</p>
                             </div>
                         </div>
                     </div>
@@ -577,12 +1143,10 @@
 
                 <!-- Charts layout -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <!-- Distribution charts -->
                     <div class="lg:col-span-5 glass-panel p-6 rounded-2xl space-y-4">
                         <h3 class="font-space font-bold text-base text-white">Threat Profile Distribution</h3>
                         <div id="chartReportsDistribution" class="w-full h-72"></div>
                     </div>
-                    <!-- Normal vs Malicious Traffic Chart -->
                     <div class="lg:col-span-7 glass-panel p-6 rounded-2xl space-y-4">
                         <h3 class="font-space font-bold text-base text-white">Intrusion Anomalies Timeline</h3>
                         <div id="chartReportsTimeline" class="w-full h-72"></div>
@@ -590,12 +1154,9 @@
                 </div>
             </div>
 
-            </div>
-
-            <!-- ================= TAB 5.5: AI SECURITY COPILOT ================= -->
+            <!-- ================= TAB 5.5: AI SECURITY COPILOT (PRESERVED & UPGRADED) ================= -->
             <div id="tab-copilot" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-                    
                     <!-- Left Panel: Chat Interface (7 columns) -->
                     <div class="lg:col-span-7 flex flex-col justify-between glass-panel rounded-2xl h-[calc(100vh-12rem)] min-h-[500px]">
                         <!-- Chat Header -->
@@ -605,11 +1166,10 @@
                                     <i data-lucide="bot" class="w-5 h-5 text-white animate-pulse"></i>
                                 </div>
                                 <div>
-                                    <h4 class="font-space font-bold text-sm text-white">AI Analyst Copilot</h4>
-                                    <p class="text-[10px] text-gray-400">Context-Aware RAG Threat Advisor</p>
+                                    <h4 class="font-space font-bold text-sm text-white">ThreatLens AI Security Copilot</h4>
+                                    <p class="text-[10px] text-gray-400">Context-Aware RAG Threat Advisor & SOC Analyst</p>
                                 </div>
                             </div>
-                            <!-- Clear chat memory button -->
                             <button id="clearChatBtn" class="p-2 rounded-lg hover:bg-white/5 text-gray-400 hover:text-cyberDanger transition-colors" title="Wipe chat history">
                                 <i data-lucide="trash-2" class="w-4.5 h-4.5"></i>
                             </button>
@@ -617,31 +1177,31 @@
 
                         <!-- Chat Messages Thread -->
                         <div id="chatMessagesContainer" class="flex-grow overflow-y-auto p-6 space-y-4">
-                            <!-- Injected by JS, seed initial analyst message -->
                             <div class="flex items-start space-x-3 max-w-[85%]">
                                 <div class="w-8 h-8 rounded-full bg-cyberAccent/20 flex items-center justify-center border border-cyberAccent/30 text-cyberAccent text-xs font-bold">AI</div>
                                 <div class="bg-[#111827]/70 border border-white/5 rounded-2xl rounded-tl-none p-4 text-xs leading-relaxed text-gray-300">
-                                    Greetings SOC Analyst. I am your **AI Security Copilot**. I have access to your active network flow prediction datasets, SHAP explainers parameters, and uploaded organizational documentation. How can I assist you with threat containment or investigation rules today?
+                                    Greetings SOC Analyst. I am your **ThreatLens AI Security Copilot**. I have access to your active flow predictions, verified ML evaluation metrics, SHAP feature rankings, and uploaded organizational documentation. Ask me about detected threats, incident triage, confusion matrix analysis, or containment steps.
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Chat Quick Action Prompt Templates -->
+                        <!-- Quick Prompt Buttons -->
                         <div class="px-6 pt-2 pb-4 border-t border-white/5 space-y-2 bg-[#090e1b]/40">
-                            <p class="text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Quick Actions</p>
+                            <p class="text-[9px] font-semibold text-gray-400 uppercase tracking-widest font-mono">SOC Quick Actions</p>
                             <div class="flex flex-wrap gap-2 text-[10px] font-bold">
-                                <button class="quick-prompt-btn px-3 py-1.5 rounded-lg border border-cyberAccent/20 hover:border-cyberAccent bg-cyberAccent/5 hover:bg-cyberAccent/15 text-cyberAccent transition-all duration-200" data-prompt="Analyze the active SHAP flow connections data.">Explain SHAP</button>
-                                <button class="quick-prompt-btn px-3 py-1.5 rounded-lg border border-cyberDanger/20 hover:border-cyberDanger bg-cyberDanger/5 hover:bg-cyberDanger/15 text-cyberDanger transition-all duration-200" data-prompt="Suggest immediate mitigation and firewall block commands for the active threat.">Suggest Mitigation</button>
-                                <button class="quick-prompt-btn px-3 py-1.5 rounded-lg border border-cyberPrimary/20 hover:border-cyberPrimary bg-cyberPrimary/5 hover:bg-cyberPrimary/15 text-cyberPrimary transition-all duration-200" data-prompt="Explain the active threat mapping to MITRE ATT&CK techniques.">Explain MITRE</button>
-                                <button class="quick-prompt-btn px-3 py-1.5 rounded-lg border border-cyberSecondary/20 hover:border-cyberSecondary bg-cyberSecondary/5 hover:bg-cyberSecondary/15 text-cyberSecondary transition-all duration-200" data-prompt="Explain SQL Injection and DDoS attacks using simple analogies for beginners.">Beginner Mode</button>
-                                <button class="quick-prompt-btn px-3 py-1.5 rounded-lg border border-cyberWarning/20 hover:border-cyberWarning bg-cyberWarning/5 hover:bg-cyberWarning/15 text-cyberWarning transition-all duration-200" data-prompt="Provide a technical expert analysis of TCP SYN flood vulnerabilities on database ports.">Expert Analysis</button>
+                                <button class="quick-prompt-btn px-3 py-1.5 rounded-lg border border-cyberAccent/20 hover:border-cyberAccent bg-cyberAccent/5 hover:bg-cyberAccent/15 text-cyberAccent transition-all duration-200" data-prompt="What threats were detected?">Threats Detected</button>
+                                <button class="quick-prompt-btn px-3 py-1.5 rounded-lg border border-cyberPrimary/20 hover:border-cyberPrimary bg-cyberPrimary/5 hover:bg-cyberPrimary/15 text-cyberPrimary transition-all duration-200" data-prompt="Explain the ML model's performance.">Model Performance</button>
+                                <button class="quick-prompt-btn px-3 py-1.5 rounded-lg border border-cyberSecondary/20 hover:border-cyberSecondary bg-cyberSecondary/5 hover:bg-cyberSecondary/15 text-cyberSecondary transition-all duration-200" data-prompt="Explain the confusion matrix.">Confusion Matrix</button>
+                                <button class="quick-prompt-btn px-3 py-1.5 rounded-lg border border-cyberWarning/20 hover:border-cyberWarning bg-cyberWarning/5 hover:bg-cyberWarning/15 text-cyberWarning transition-all duration-200" data-prompt="Which attack type is most common?">Most Common Attack</button>
+                                <button class="quick-prompt-btn px-3 py-1.5 rounded-lg border border-cyberDanger/20 hover:border-cyberDanger bg-cyberDanger/5 hover:bg-cyberDanger/15 text-cyberDanger transition-all duration-200" data-prompt="What should an analyst investigate first?">Triage Priorities</button>
+                                <button class="quick-prompt-btn px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/25 bg-white/5 hover:bg-white/10 text-gray-300 transition-all duration-200" data-prompt="Explain this incident in simple language.">Simple Language</button>
                             </div>
                         </div>
 
                         <!-- Chat Input Box -->
                         <div class="p-4 border-t border-white/5 bg-[#0a101e] rounded-b-2xl">
                             <form id="copilotChatForm" class="flex items-center space-x-3">
-                                <input type="text" id="chatInput" placeholder="Ask Copilot about active SHAP flows, CVEs, or mitigation plans..." 
+                                <input type="text" id="chatInput" placeholder="Ask Copilot about active SHAP flows, confusion matrix, or containment rules..." 
                                     class="flex-grow px-4 py-3 bg-[#0c1425] border border-white/5 focus:border-cyberAccent rounded-xl text-xs text-white focus:outline-none focus:ring-1 focus:ring-cyberAccent transition-all">
                                 <button type="submit" class="p-3 rounded-xl bg-gradient-to-r from-cyberAccent to-cyberPrimary hover:from-cyberPrimary hover:to-cyberAccent text-white shadow-neon-purple/20 hover:scale-105 active:scale-95 transition-transform flex items-center justify-center">
                                     <i data-lucide="send" class="w-4 h-4"></i>
@@ -664,7 +1224,6 @@
                                 <button id="smartSearchBtn" class="px-4 py-2.5 rounded-xl bg-cyberAccent/20 hover:bg-cyberAccent/30 border border-cyberAccent/30 text-cyberAccent text-xs font-bold transition-all">Search</button>
                             </div>
                             
-                            <!-- Search results panel -->
                             <div id="searchResultsList" class="hidden max-h-48 overflow-y-auto space-y-2.5 text-xs text-gray-400 font-light pt-2">
                                 <!-- Populated dynamically -->
                             </div>
@@ -677,9 +1236,8 @@
                                     <i data-lucide="folder-git" class="w-4 h-4 text-cyberSecondary"></i>
                                     <span>RAG Document Library</span>
                                 </h4>
-                                <p class="text-[10px] text-gray-400">Upload corporate incident runbooks, firewalls guides, or NIST compliance standards (PDF/TXT) to inject semantic RAG knowledge.</p>
+                                <p class="text-[10px] text-gray-400">Upload corporate incident runbooks, firewall policies, or NIST guidelines (PDF/DOCX/TXT/MD) to inject semantic knowledge.</p>
                                 
-                                <!-- Document Drag Area -->
                                 <div id="docDragDropArea" class="border-2 border-dashed border-white/10 hover:border-cyberAccent rounded-xl p-6 text-center cursor-pointer bg-black/10 hover:bg-cyberAccent/5 transition-all flex flex-col items-center space-y-2">
                                     <i data-lucide="file-up" class="w-6 h-6 text-cyberAccent"></i>
                                     <span class="text-xs text-white font-semibold">Ingest manuals document</span>
@@ -687,7 +1245,6 @@
                                     <input type="file" id="manualDocInput" class="hidden" accept=".pdf,.docx,.txt,.md">
                                 </div>
 
-                                <!-- Ingestion Progress Indicator -->
                                 <div id="docProgressIndicator" class="hidden space-y-1.5 pt-2">
                                     <div class="flex justify-between items-center text-[10px]">
                                         <span class="text-gray-400">Extracting and calculating vector chunks...</span>
@@ -699,39 +1256,83 @@
                                 </div>
                             </div>
 
-                            <!-- Ingested Documents List -->
                             <div class="space-y-2.5 pt-4 border-t border-white/5">
-                                <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Ingested Manuals Catalog</p>
+                                <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-widest font-mono">Ingested Knowledge Catalog</p>
                                 <div class="max-h-48 overflow-y-auto space-y-2" id="ingestedManualsList">
                                     <!-- Ingested documents list elements injected dynamically -->
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
-            <!-- ================= TAB 6: SETTINGS ================= -->
+            <!-- ================= TAB: SYSTEM HEALTH & AUDIT LOGS (NEW) ================= -->
+            <div id="tab-system-audit" class="tab-content space-y-6">
+                <div class="glass-panel p-6 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gradient-to-r from-cyberCard to-black/40 border border-cyberSecondary/20">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="cpu" class="w-5 h-5 text-cyberSecondary"></i>
+                            <h3 class="font-space font-bold text-xl text-white">System Component Health & Security Audit Log</h3>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1">
+                            Live operational diagnostics for all architecture components and immutable audit log of administrative actions.
+                        </p>
+                    </div>
+                    <button id="refreshSystemHealthBtn" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs font-bold border border-white/10 flex items-center space-x-2">
+                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                        <span>Refresh Health</span>
+                    </button>
+                </div>
+
+                <!-- Component Health Grid (6 components) -->
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" id="componentHealthGrid">
+                    <!-- Populated dynamically via JS -->
+                </div>
+
+                <!-- Security Audit Trail Table -->
+                <div class="glass-panel rounded-2xl overflow-hidden p-6 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-space font-bold text-sm text-white">Security Operations Audit Log</h4>
+                        <span class="text-xs text-gray-400 font-mono">Last 50 Events</span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs select-none">
+                            <thead>
+                                <tr class="bg-black/30 text-gray-400 font-semibold border-b border-white/5 uppercase tracking-wider text-[10px] font-mono">
+                                    <th class="px-4 py-3">Timestamp</th>
+                                    <th class="px-4 py-3">Action Event</th>
+                                    <th class="px-4 py-3">User / Service</th>
+                                    <th class="px-4 py-3">Audit Details</th>
+                                    <th class="px-4 py-3 text-right">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="auditLogsTableBody" class="divide-y divide-white/5 text-gray-300">
+                                <!-- Populated dynamically via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB 6: SETTINGS (PRESERVED) ================= -->
             <div id="tab-settings" class="tab-content space-y-6">
                 <div class="max-w-4xl mx-auto space-y-6">
                     <div class="glass-panel p-6 rounded-2xl space-y-6">
-                        <h3 class="font-space font-bold text-lg text-white border-b border-white/5 pb-3">SOC Ingestion Configurations</h3>
+                        <h3 class="font-space font-bold text-lg text-white border-b border-white/5 pb-3">SOC Platform Configurations</h3>
                         
                         <div class="space-y-6">
-                            <!-- Theme Choice -->
                             <div class="flex justify-between items-center">
                                 <div>
                                     <h4 class="text-sm font-semibold text-white">Visual Mode</h4>
                                     <p class="text-xs text-gray-400">Choose between futuristic dark themed SOC or light mode layout.</p>
                                 </div>
                                 <div class="flex items-center space-x-2 bg-[#0c1425] p-1 rounded-xl border border-white/5">
-                                    <button class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-cyberPrimary text-white shadow-neon-blue">Dark Mode</button>
-                                    <button class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-400 hover:text-white transition-colors" onclick="alert('Light Mode is currently deactivated for SOC protection. Please use Dark Mode.')">Light Mode</button>
+                                    <button class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-cyberPrimary text-white shadow-neon-blue">Dark Security Mode</button>
                                 </div>
                             </div>
 
-                            <!-- Detection Confidence slider -->
                             <div class="space-y-3">
                                 <div class="flex justify-between items-center">
                                     <div>
@@ -744,29 +1345,15 @@
                                     <input type="range" min="0.05" max="0.95" step="0.05" value="0.50" id="thresholdSlider" class="w-full cyber-range">
                                 </div>
                                 <div class="flex justify-between text-[10px] text-gray-500 font-mono">
-                                    <span>0.05 (High Alerts, Noise)</span>
-                                    <span>0.95 (Highly Confident Alerts, Missed Attacks)</span>
+                                    <span>0.05 (High Sensitivity)</span>
+                                    <span>0.95 (High Specificity)</span>
                                 </div>
                             </div>
 
-                            <!-- Language selection -->
                             <div class="flex justify-between items-center">
                                 <div>
-                                    <h4 class="text-sm font-semibold text-white">Command Language</h4>
-                                    <p class="text-xs text-gray-400">Select language for interface logs and recommended action lists.</p>
-                                </div>
-                                <select class="bg-[#0c1425] border border-white/5 rounded-xl text-xs text-white px-4 py-2.5 focus:outline-none focus:border-cyberSecondary">
-                                    <option value="en">English (US - SOC Standard)</option>
-                                    <option value="de">Deutsch (Compliance)</option>
-                                    <option value="es">Español (LATAM)</option>
-                                </select>
-                            </div>
-
-                            <!-- Notifications toggle -->
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <h4 class="text-sm font-semibold text-white">Socket Monitor Audio Alerts</h4>
-                                    <p class="text-xs text-gray-400">Trigger system warning beep sound in browser when a high-risk packet hits the interface.</p>
+                                    <h4 class="text-sm font-semibold text-white">Audio Alerts</h4>
+                                    <p class="text-xs text-gray-400">Play alert chime in browser on high-risk detection.</p>
                                 </div>
                                 <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
                                     <input type="checkbox" name="toggle" id="audioToggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-gray-600 border-4 border-gray-800 appearance-none cursor-pointer focus:outline-none">
@@ -784,12 +1371,12 @@
                         <div class="space-y-4">
                             <div class="space-y-1.5">
                                 <label for="geminiApiKey" class="block text-[10px] font-semibold text-gray-300 uppercase tracking-wider">Gemini API Key</label>
-                                <input type="password" id="geminiApiKey" placeholder="Enter GEMINI_API_KEY (Unconfigured)" 
+                                <input type="password" id="geminiApiKey" placeholder="Enter GEMINI_API_KEY (Optional)" 
                                     class="block w-full px-4 py-2.5 bg-[#0c1425] border border-white/5 focus:border-cyberAccent rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-cyberAccent transition-all duration-200">
                             </div>
                             <div class="space-y-1.5">
                                 <label for="groqApiKey" class="block text-[10px] font-semibold text-gray-300 uppercase tracking-wider">Groq API Key</label>
-                                <input type="password" id="groqApiKey" placeholder="Enter GROQ_API_KEY (Unconfigured)" 
+                                <input type="password" id="groqApiKey" placeholder="Enter GROQ_API_KEY (Optional)" 
                                     class="block w-full px-4 py-2.5 bg-[#0c1425] border border-white/5 focus:border-cyberAccent rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-cyberAccent transition-all duration-200">
                             </div>
                             
@@ -804,35 +1391,19 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- User Profile setup -->
-                    <div class="glass-panel p-6 rounded-2xl space-y-4">
-                        <h3 class="font-space font-bold text-lg text-white border-b border-white/5 pb-3">SOC Analyst Information</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="space-y-1">
-                                <label class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Officer Name</label>
-                                <input type="text" value="Administrator" disabled class="block w-full px-4 py-2.5 bg-[#0c1425] border border-white/5 rounded-xl text-xs text-gray-500 focus:outline-none">
-                            </div>
-                            <div class="space-y-1">
-                                <label class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Access Clearance Profile</label>
-                                <input type="text" value="SOC_LEVEL_3_ADMIN" disabled class="block w-full px-4 py-2.5 bg-[#0c1425] border border-white/5 rounded-xl text-xs text-gray-500 focus:outline-none">
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
         </main>
     </div>
 
-    <!-- ================= ATTACK DETAILS DRAWER (SLIDE-OVER PANEL) ================= -->
+    <!-- ================= ATTACK & INCIDENT INVESTIGATION DRAWER ================= -->
     <div id="attackDetailsDrawer" class="fixed inset-y-0 right-0 z-50 w-full max-w-md transform translate-x-full transition-transform duration-300 ease-in-out bg-[#0d1425] border-l border-white/10 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] flex flex-col justify-between">
-        
         <!-- Drawer Header -->
-        <div class="h-16 flex items-center justify-between px-6 border-b border-white/5 bg-[#0a101e]">
+        <div class="h-16 flex items-center justify-between px-6 border-b border-white/5 bg-[#0a101e] flex-shrink-0">
             <div class="flex items-center space-x-2.5">
                 <i data-lucide="shield-alert" class="w-5 h-5 text-cyberDanger animate-pulse" id="drawerHeaderIcon"></i>
-                <span class="font-space font-bold text-sm text-white" id="drawerTitle">Attack Details</span>
+                <span class="font-space font-bold text-sm text-white" id="drawerTitle">Threat Investigation</span>
             </div>
             <button id="closeDrawerBtn" class="p-1 rounded hover:bg-white/5 text-gray-400 hover:text-white transition-colors">
                 <i data-lucide="x" class="w-5 h-5"></i>
@@ -841,50 +1412,60 @@
 
         <!-- Drawer Content -->
         <div class="flex-grow overflow-y-auto p-6 space-y-6">
-            
             <!-- Risk Header Box -->
             <div class="p-4 rounded-xl bg-cyberDanger/10 border border-cyberDanger/20 flex flex-col items-center justify-center text-center space-y-1" id="drawerRiskBox">
-                <span class="text-[10px] font-semibold uppercase text-cyberDanger tracking-widest font-mono" id="drawerRiskHeader">CRITICAL CRITICAL WARNING</span>
+                <span class="text-[10px] font-semibold uppercase text-cyberDanger tracking-widest font-mono" id="drawerRiskHeader">CRITICAL THREAT ALERT</span>
                 <span class="text-2xl font-space font-bold text-cyberDanger text-glow-danger" id="drawerConfidenceText">98.7% Confident</span>
-                <span class="text-[10px] text-gray-400" id="drawerFlowId">Flow ID: FL-7294</span>
+                <span class="text-[10px] text-gray-400 font-mono" id="drawerFlowId">Flow ID: FL-7294</span>
             </div>
 
             <!-- Parameters Grid -->
-            <div class="space-y-4">
-                <h4 class="font-space font-bold text-xs text-white uppercase tracking-wider">Network flow parameters</h4>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-black/25 p-3 rounded-lg border border-white/5 space-y-0.5">
-                        <span class="text-[9px] text-gray-500 uppercase font-mono">Source IP</span>
-                        <p class="text-xs font-bold text-white font-mono" id="drawerSrcIp">10.0.0.12</p>
+            <div class="space-y-3">
+                <h4 class="font-space font-bold text-xs text-white uppercase tracking-wider">Network Flow Parameters</h4>
+                <div class="grid grid-cols-2 gap-3 text-xs">
+                    <div class="bg-black/30 p-2.5 rounded-lg border border-white/5">
+                        <span class="text-[9px] text-gray-500 uppercase font-mono block">Source IP</span>
+                        <p class="font-bold text-white font-mono" id="drawerSrcIp">10.0.0.12</p>
                     </div>
-                    <div class="bg-black/25 p-3 rounded-lg border border-white/5 space-y-0.5">
-                        <span class="text-[9px] text-gray-500 uppercase font-mono">Destination IP</span>
-                        <p class="text-xs font-bold text-white font-mono" id="drawerDstIp">192.168.1.100</p>
+                    <div class="bg-black/30 p-2.5 rounded-lg border border-white/5">
+                        <span class="text-[9px] text-gray-500 uppercase font-mono block">Destination IP</span>
+                        <p class="font-bold text-white font-mono" id="drawerDstIp">192.168.1.100</p>
                     </div>
-                    <div class="bg-black/25 p-3 rounded-lg border border-white/5 space-y-0.5">
-                        <span class="text-[9px] text-gray-500 uppercase font-mono">Protocol</span>
-                        <p class="text-xs font-bold text-white font-mono" id="drawerProtocol">TCP (6)</p>
+                    <div class="bg-black/30 p-2.5 rounded-lg border border-white/5">
+                        <span class="text-[9px] text-gray-500 uppercase font-mono block">Protocol & Port</span>
+                        <p class="font-bold text-white font-mono" id="drawerProtocol">TCP (80)</p>
                     </div>
-                    <div class="bg-black/25 p-3 rounded-lg border border-white/5 space-y-0.5">
-                        <span class="text-[9px] text-gray-500 uppercase font-mono">Attack Type</span>
-                        <p class="text-xs font-bold text-cyberDanger text-glow-danger" id="drawerAttackType">DDoS HTTP Flood</p>
+                    <div class="bg-black/30 p-2.5 rounded-lg border border-white/5">
+                        <span class="text-[9px] text-gray-500 uppercase font-mono block">Attack Class</span>
+                        <p class="font-bold text-cyberDanger text-glow-danger truncate" id="drawerAttackType">DDoS Ingress</p>
                     </div>
-                    <div class="bg-black/25 p-3 rounded-lg border border-white/5 space-y-0.5">
-                        <span class="text-[9px] text-gray-500 uppercase font-mono">Timestamp</span>
-                        <p class="text-xs font-bold text-white font-mono" id="drawerTimestamp">2026-07-29 18:38:02</p>
+                    <div class="bg-black/30 p-2.5 rounded-lg border border-white/5">
+                        <span class="text-[9px] text-gray-500 uppercase font-mono block">Detection Time</span>
+                        <p class="font-bold text-white font-mono text-[10px]" id="drawerTimestamp">2026-10-01 20:30</p>
                     </div>
-                    <div class="bg-black/25 p-3 rounded-lg border border-white/5 space-y-0.5">
-                        <span class="text-[9px] text-gray-500 uppercase font-mono">Risk Index</span>
-                        <p class="text-xs font-bold text-cyberDanger font-mono" id="drawerRiskIndex">CRITICAL (98/100)</p>
+                    <div class="bg-black/30 p-2.5 rounded-lg border border-white/5">
+                        <span class="text-[9px] text-gray-500 uppercase font-mono block">Risk Score Index</span>
+                        <p class="font-bold text-cyberDanger font-mono" id="drawerRiskIndex">CRITICAL (94/100)</p>
                     </div>
+                </div>
+            </div>
+
+            <!-- Risk Score Factors Checklist (Transparent Explanation) -->
+            <div class="space-y-2">
+                <h4 class="font-space font-bold text-xs text-white uppercase tracking-wider flex items-center space-x-1.5">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-cyberWarning"></i>
+                    <span>Risk Scoring Methodology Factors</span>
+                </h4>
+                <div class="space-y-1.5 p-3 rounded-xl bg-black/40 border border-white/5 text-[11px]" id="drawerRiskFactorsList">
+                    <!-- Dynamic risk checklist -->
                 </div>
             </div>
 
             <!-- Explainable AI (SHAP) Quick reasons -->
             <div class="space-y-3">
-                <h4 class="font-space font-bold text-xs text-white uppercase tracking-wider flex items-center space-x-2">
-                    <i data-lucide="eye" class="w-4 h-4 text-cyberAccent"></i>
-                    <span>Explainable AI (SHAP) Quick Breakdown</span>
+                <h4 class="font-space font-bold text-xs text-white uppercase tracking-wider flex items-center space-x-1.5">
+                    <i data-lucide="eye" class="w-3.5 h-3.5 text-cyberAccent"></i>
+                    <span>SHAP Feature Influence Breakdown</span>
                 </h4>
                 <div class="space-y-2" id="drawerShapReasonsList">
                     <!-- Dynamic details here -->
@@ -893,41 +1474,103 @@
 
             <!-- Recommended Remediation Actions -->
             <div class="space-y-3">
-                <h4 class="font-space font-bold text-xs text-white uppercase tracking-wider flex items-center space-x-2">
-                    <i data-lucide="shield-check" class="w-4 h-4 text-cyberSuccess"></i>
-                    <span>Remediation Procedures (Incident Response)</span>
+                <h4 class="font-space font-bold text-xs text-white uppercase tracking-wider flex items-center space-x-1.5">
+                    <i data-lucide="shield" class="w-3.5 h-3.5 text-cyberSuccess"></i>
+                    <span>Containment & Response Procedures</span>
                 </h4>
                 <div class="bg-[#0c1b29] border border-cyberSuccess/30 p-4 rounded-xl space-y-3">
                     <p class="text-xs text-gray-300 font-light" id="drawerRemediationText">
                         The system recommends immediate mitigation protocols: block incoming packets on the edge firewall from the source IP address, and quarantine internal connection interfaces.
                     </p>
-                    <!-- Trigger Mitigation Button -->
                     <button onclick="triggerMitigation()" class="w-full py-2.5 rounded-lg bg-cyberSuccess text-white text-xs font-bold tracking-wide shadow-neon-blue flex items-center justify-center space-x-2 hover:scale-[1.02] transition-transform">
                         <i data-lucide="shield-alert" class="w-4 h-4"></i>
                         <span>Apply Port Mitigation Block</span>
                     </button>
-                    <!-- Download AI Incident Report Button -->
                     <button id="drawerDownloadAiReportBtn" class="w-full py-2.5 rounded-lg bg-cyberAccent/20 hover:bg-cyberAccent/30 text-cyberAccent text-xs font-bold tracking-wide flex items-center justify-center space-x-2 border border-cyberAccent/30 hover:border-cyberAccent mt-2">
                         <i data-lucide="file-down" class="w-4 h-4"></i>
                         <span>Download AI Incident Report</span>
                     </button>
                 </div>
             </div>
-
         </div>
 
         <!-- Drawer Footer -->
-        <div class="p-4 border-t border-white/5 bg-[#0a101e] flex gap-3">
-            <button id="drawerOpenShapBtn" class="flex-grow py-3 rounded-lg bg-cyberAccent/20 hover:bg-cyberAccent/30 text-cyberAccent text-xs font-bold transition-all flex items-center justify-center space-x-2 border border-cyberAccent/30 hover:border-cyberAccent shadow-neon-purple/10">
-                <i data-lucide="eye" class="w-4 h-4"></i>
-                <span>Open SHAP dashboard</span>
+        <div class="p-4 border-t border-white/5 bg-[#0a101e] flex gap-3 flex-shrink-0">
+            <button id="drawerOpenShapBtn" class="flex-grow py-2.5 rounded-lg bg-cyberAccent/20 hover:bg-cyberAccent/30 text-cyberAccent text-xs font-bold transition-all flex items-center justify-center space-x-2 border border-cyberAccent/30 hover:border-cyberAccent">
+                <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                <span>Open SHAP View</span>
             </button>
-            <button id="drawerAskCopilotBtn" class="flex-grow py-3 rounded-lg bg-cyberPrimary/20 hover:bg-cyberPrimary/30 text-cyberPrimary text-xs font-bold transition-all flex items-center justify-center space-x-2 border border-cyberPrimary/30 hover:border-cyberPrimary shadow-neon-blue/10">
-                <i data-lucide="message-square-code" class="w-4 h-4"></i>
-                <span>Consult AI Copilot</span>
+            <button id="drawerAskCopilotBtn" class="flex-grow py-2.5 rounded-lg bg-cyberPrimary/20 hover:bg-cyberPrimary/30 text-cyberPrimary text-xs font-bold transition-all flex items-center justify-center space-x-2 border border-cyberPrimary/30 hover:border-cyberPrimary">
+                <i data-lucide="message-square-code" class="w-3.5 h-3.5"></i>
+                <span>Consult Copilot</span>
             </button>
         </div>
+    </div>
 
+    <!-- ================= CREATE MANUAL INCIDENT MODAL ================= -->
+    <div id="newIncidentModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel p-6 rounded-2xl w-full max-w-lg border border-white/10 space-y-4 bg-[#0d1527]">
+            <div class="flex justify-between items-center pb-2 border-b border-white/5">
+                <h3 class="font-space font-bold text-base text-white flex items-center space-x-2">
+                    <i data-lucide="shield-alert" class="w-4 h-4 text-cyberDanger"></i>
+                    <span>Create Manual Security Incident</span>
+                </h3>
+                <button id="closeNewIncidentModalBtn" class="text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <form id="newIncidentForm" class="space-y-3 text-xs">
+                <div>
+                    <label class="block text-gray-400 font-mono text-[10px] uppercase mb-1">Attack Classification</label>
+                    <select id="newIncAttackType" class="w-full px-3 py-2 bg-[#0c1425] border border-white/10 rounded-lg text-white focus:outline-none focus:border-cyberSecondary">
+                        <option value="DDoS Ingress Exploit">DDoS Ingress Exploit</option>
+                        <option value="Port Scanner Reconnaissance">Port Scanner Reconnaissance</option>
+                        <option value="SSH Brute-Force Authentication">SSH Brute-Force Authentication</option>
+                        <option value="Anomalous Traffic Outlier">Anomalous Traffic Outlier</option>
+                        <option value="Suspicious Exploit Probe">Suspicious Exploit Probe</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-gray-400 font-mono text-[10px] uppercase mb-1">Severity</label>
+                        <select id="newIncSeverity" class="w-full px-3 py-2 bg-[#0c1425] border border-white/10 rounded-lg text-white focus:outline-none focus:border-cyberSecondary">
+                            <option value="CRITICAL">CRITICAL</option>
+                            <option value="HIGH" selected>HIGH</option>
+                            <option value="MEDIUM">MEDIUM</option>
+                            <option value="LOW">LOW</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 font-mono text-[10px] uppercase mb-1">Risk Score (0-100)</label>
+                        <input type="number" id="newIncRiskScore" min="0" max="100" value="85" class="w-full px-3 py-2 bg-[#0c1425] border border-white/10 rounded-lg text-white focus:outline-none focus:border-cyberSecondary">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-gray-400 font-mono text-[10px] uppercase mb-1">Source IP</label>
+                        <input type="text" id="newIncSrcIp" placeholder="192.168.1.100" required class="w-full px-3 py-2 bg-[#0c1425] border border-white/10 rounded-lg text-white focus:outline-none focus:border-cyberSecondary">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 font-mono text-[10px] uppercase mb-1">Target Port</label>
+                        <input type="number" id="newIncPort" value="80" class="w-full px-3 py-2 bg-[#0c1425] border border-white/10 rounded-lg text-white focus:outline-none focus:border-cyberSecondary">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-400 font-mono text-[10px] uppercase mb-1">Assigned Analyst</label>
+                    <input type="text" id="newIncAnalyst" value="SOC Analyst 1" class="w-full px-3 py-2 bg-[#0c1425] border border-white/10 rounded-lg text-white focus:outline-none focus:border-cyberSecondary">
+                </div>
+                <div>
+                    <label class="block text-gray-400 font-mono text-[10px] uppercase mb-1">Recommended Containment Actions</label>
+                    <textarea id="newIncActions" rows="2" placeholder="Describe remediation or firewall drop action..." class="w-full px-3 py-2 bg-[#0c1425] border border-white/10 rounded-lg text-white focus:outline-none focus:border-cyberSecondary"></textarea>
+                </div>
+
+                <div class="pt-2 flex justify-end space-x-3">
+                    <button type="button" id="cancelNewIncidentBtn" class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 font-semibold">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-lg bg-cyberDanger hover:bg-cyberDanger/90 text-white font-bold shadow-neon-danger">Create Incident</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

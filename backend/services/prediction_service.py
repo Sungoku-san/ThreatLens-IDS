@@ -23,20 +23,41 @@ class PredictionService:
                 
             # 1. Run classifier prediction
             pred_res = predict_flow(payload, threshold)
-            
-            # 2. Run SHAP explanations
+
+            # 2. Run Anomaly Detection (Unsupervised)
+            from backend.services.anomaly_service import AnomalyService
+            anomaly_res = AnomalyService.detect(
+                pred_res.get("scaled_features"),
+                pred_res.get("prediction"),
+                pred_res.get("confidence", 90.0)
+            )
+
+            # 3. Run Risk Scoring Engine
+            from backend.services.risk_service import RiskService
+            risk_res = RiskService.calculate_risk(
+                prediction=pred_res["prediction"],
+                attack_type=pred_res["attack_type"],
+                confidence=pred_res["confidence"],
+                payload=payload,
+                is_anomaly=anomaly_res["is_anomaly"]
+            )
+            risk_score = risk_res["score"]
+            risk_level = risk_res["severity"]  # Use calibrated risk level
+
+            # 4. Run SHAP explanations
             model = load_trained_model()
             shap_res = explain_prediction(payload, pred_res, model)
             
             # Formulate timestamp
             timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             
-            # 3. Store in DB
+            # 5. Store in DB (handling schema with risk_score, anomaly_score, is_anomaly)
             cursor.execute('''
                 INSERT INTO predictions (
                     flow_id, timestamp, src_ip, dst_ip, protocol, port, 
-                    prediction, confidence, risk_level, attack_type, explanation, shap_values
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    prediction, confidence, risk_level, attack_type, explanation, shap_values,
+                    risk_score, anomaly_score, is_anomaly
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 flow_id,
                 timestamp,
@@ -46,14 +67,37 @@ class PredictionService:
                 int(port),
                 pred_res["prediction"],
                 pred_res["confidence"],
-                pred_res["risk_level"],
+                risk_level,
                 pred_res["attack_type"],
                 shap_res["explanation"],
-                json.dumps(shap_res["shap_values"])
+                json.dumps(shap_res["shap_values"]),
+                risk_score,
+                anomaly_res["anomaly_score"],
+                1 if anomaly_res["is_anomaly"] else 0
             ))
             
             conn.commit()
             
+            # 6. Automated Incident Creation for High-Risk threats
+            if risk_score >= 60 or risk_level in ["CRITICAL", "HIGH"]:
+                try:
+                    from backend.services.incident_service import IncidentService
+                    IncidentService.create_incident(
+                        flow_id=flow_id,
+                        attack_type=pred_res["attack_type"],
+                        severity=risk_level,
+                        risk_score=risk_score,
+                        confidence=pred_res["confidence"],
+                        src_ip=src_ip,
+                        dst_ip=dst_ip,
+                        port=port,
+                        protocol=protocol,
+                        assigned_analyst="SOC Analyst 1",
+                        recommended_actions=f"Isolate host {src_ip} at firewall. Apply rate limiting and drop suspicious traffic targeting port {port}."
+                    )
+                except Exception as inc_err:
+                    logger.warning(f"Auto-incident creation skipped: {inc_err}")
+
             # Update running metrics totals
             PredictionService.update_running_metrics(pred_res["prediction"])
             
@@ -67,8 +111,11 @@ class PredictionService:
                 "port": port,
                 "prediction": pred_res["prediction"],
                 "confidence": pred_res["confidence"],
-                "risk_level": pred_res["risk_level"],
+                "risk_level": risk_level,
+                "risk_score": risk_score,
+                "risk_factors": risk_res["factors"],
                 "attack_type": pred_res["attack_type"],
+                "anomaly_detection": anomaly_res,
                 "explanation": shap_res["explanation"],
                 "shap_values": shap_res["shap_values"]
             }
@@ -185,3 +232,83 @@ class PredictionService:
                 "fpr": 0.11,
                 "threat_level": "MODERATE"
             }
+
+    @staticmethod
+    def get_threat_analytics():
+        """
+        Gathers comprehensive cybersecurity threat analytics from actual database records:
+        - Security overview counts
+        - Attack type distribution
+        - Severity breakdown
+        - Threat timeline
+        - Port and protocol analytics
+        - SOC scorecard metrics
+        """
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # 1. Total flow counts
+        cursor.execute("SELECT COUNT(*) FROM predictions")
+        total_flows = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(*) FROM predictions WHERE prediction != 'Normal'")
+        threats_count = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(*) FROM predictions WHERE prediction = 'Normal'")
+        benign_count = cursor.fetchone()[0]
+
+        # 2. Severity breakdown
+        cursor.execute("SELECT risk_level, COUNT(*) as cnt FROM predictions GROUP BY risk_level")
+        sev_map = {r['risk_level'].upper(): r['cnt'] for r in cursor.fetchall()}
+        critical_count = sev_map.get("CRITICAL", 0)
+        high_count = sev_map.get("HIGH", 0)
+        medium_count = sev_map.get("MEDIUM", 0) + sev_map.get("MODERATE", 0)
+        low_count = sev_map.get("LOW", 0)
+
+        # 3. Attack types distribution
+        cursor.execute("SELECT attack_type, COUNT(*) as cnt FROM predictions WHERE prediction != 'Normal' GROUP BY attack_type ORDER BY cnt DESC")
+        attack_types = [{"attack_type": r['attack_type'], "count": r['cnt']} for r in cursor.fetchall()]
+
+        # 4. Protocol distribution
+        cursor.execute("SELECT protocol, COUNT(*) as cnt FROM predictions GROUP BY protocol")
+        protocols = [{"protocol": r['protocol'], "count": r['cnt']} for r in cursor.fetchall()]
+
+        # 5. Top targeted ports
+        cursor.execute("SELECT port, COUNT(*) as cnt FROM predictions WHERE prediction != 'Normal' GROUP BY port ORDER BY cnt DESC LIMIT 5")
+        top_ports = [{"port": r['port'], "count": r['cnt']} for r in cursor.fetchall()]
+
+        # 6. Event timeline (last 20 logged threat flows)
+        cursor.execute("SELECT flow_id, timestamp, src_ip, dst_ip, attack_type, risk_level, confidence, risk_score FROM predictions ORDER BY timestamp DESC LIMIT 20")
+        timeline = [row_to_dict(r) for r in cursor.fetchall()]
+
+        # 7. Anomaly count
+        cursor.execute("SELECT COUNT(*) FROM predictions WHERE is_anomaly = 1")
+        anomaly_count = cursor.fetchone()[0]
+
+        conn.close()
+
+        threat_rate = round((threats_count / total_flows) * 100, 2) if total_flows > 0 else 0.0
+
+        return {
+            "overview": {
+                "total_flows": total_flows,
+                "threats_detected": threats_count,
+                "benign_traffic": benign_count,
+                "threat_rate": threat_rate,
+                "critical_threats": critical_count,
+                "high_threats": high_count,
+                "medium_threats": medium_count,
+                "low_threats": low_count,
+                "anomaly_count": anomaly_count
+            },
+            "attack_types": attack_types,
+            "severity_distribution": {
+                "CRITICAL": critical_count,
+                "HIGH": high_count,
+                "MEDIUM": medium_count,
+                "LOW": low_count
+            },
+            "protocols": protocols,
+            "top_ports": top_ports,
+            "timeline": timeline
+        }
